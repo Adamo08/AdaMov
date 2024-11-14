@@ -1,5 +1,3 @@
----
-
 ### Controllers
 
 Each controller will handle specific actions related to its area, interacting with models to retrieve data and directing that data to views.
@@ -64,7 +62,7 @@ Each controller will handle specific actions related to its area, interacting wi
       - `manageUsers`: CRUD operations for managing user accounts.
       - `manageReviews`: Manage user reviews and moderate if necessary.
 
----
+
 
 ### Models
 
@@ -133,7 +131,6 @@ Each model will represent a specific table or set of related data and contain me
      - `getAllUsers`: Fetches all users.
      - `deleteUser`: Deletes a user by ID.
 
----
 
 ### Example Directory Structure (Expanded)
 
