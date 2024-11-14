@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS genres (
 -- The media table stores information about movies, shows, or any media content.
 --
 
-CREATE TABLE IF NOT EXISTS  media (
+CREATE TABLE IF NOT EXISTS media (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
@@ -48,10 +48,13 @@ CREATE TABLE IF NOT EXISTS  media (
     genre_id INT,
     comments_count INT DEFAULT 0,
     views_count INT DEFAULT 0,
+    thumbnail VARCHAR(255),     -- URL or path to the media thumbnail image
+    file_name VARCHAR(255),     -- Name of the media file
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (genre_id) REFERENCES genres(id)
 );
+
 
 
 --
@@ -123,5 +126,70 @@ CREATE TABLE IF NOT EXISTS favorites (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (media_id) REFERENCES media(id)
 );
+
+
+
+
+-- Inserting sample data for the movies_db database with SHA-256 hashed passwords
+
+-- Inserting into users table with hashed passwords
+INSERT INTO users (fname, lname, email, password, status, verification_token) 
+VALUES
+    ('John', 'Doe', 'john.doe@example.com', SHA2('password123', 256), TRUE, NULL),
+    ('Jane', 'Smith', 'jane.smith@example.com', SHA2('securepassword', 256), FALSE, 'token123'),
+    ('Alice', 'Johnson', 'alice.johnson@example.com', SHA2('mysecretpassword', 256), TRUE, NULL),
+    ('Bob', 'Williams', 'bob.williams@example.com', SHA2('password456', 256), FALSE, 'token456');
+
+-- Inserting into genres table
+INSERT INTO genres (name, description) 
+VALUES
+    ('Action', 'High-energy scenes, stunts, and activities.'),
+    ('Comedy', 'Humorous and lighthearted media.'),
+    ('Drama', 'Serious, narrative-driven content.'),
+    ('Horror', 'Designed to scare and thrill the audience.');
+
+-- Inserting into media table
+INSERT INTO media (title, description, release_date, genre_id, comments_count, views_count, thumbnail, file_name) 
+VALUES
+    ('Action Movie', 'An exciting action movie.', '2023-01-01', 1, 5, 100, 'images/action_movie.jpg', 'videos/action_movie.mp4'),
+    ('Comedy Show', 'A funny comedy show.', '2022-08-15', 2, 10, 200, 'images/comedy_show.jpg', 'videos/comedy_show.mp4'),
+    ('Dramatic Film', 'A serious drama.', '2021-10-10', 3, 8, 150, 'images/dramatic_film.jpg', 'videos/dramatic_film.mp4'),
+    ('Horror Flick', 'A scary horror movie.', '2024-05-20', 4, 4, 120, 'images/horror_flick.jpg', 'videos/horror_flick.mp4');
+
+
+-- Inserting into comments table
+INSERT INTO comments (media_id, user_id, comment, parent_id) 
+VALUES
+    (1, 1, 'Loved this movie!', NULL),
+    (2, 2, 'This show is hilarious!', NULL),
+    (1, 3, 'Not my favorite action movie.', NULL),
+    (3, 4, 'The acting was superb.', NULL),
+    (4, 1, 'This movie gave me chills.', NULL);
+
+-- Inserting into reviews table
+INSERT INTO reviews (media_id, user_id, rating, review) 
+VALUES
+    (1, 1, 4, 'Great action scenes!'),
+    (2, 2, 5, 'One of the funniest shows I have watched.'),
+    (3, 3, 3, 'Good storyline but a bit slow.'),
+    (4, 4, 5, 'Perfect for horror lovers!'),
+    (1, 4, 2, 'Did not live up to my expectations.');
+
+-- Inserting into user_social_links table
+INSERT INTO user_social_links (user_id, facebook, instagram, twitter, github) 
+VALUES
+    (1, 'https://facebook.com/johndoe', 'https://instagram.com/johndoe', NULL, 'https://github.com/johndoe'),
+    (2, NULL, 'https://instagram.com/janesmith', 'https://twitter.com/janesmith', NULL),
+    (3, 'https://facebook.com/alicejohnson', NULL, 'https://twitter.com/alicejohnson', 'https://github.com/alicejohnson'),
+    (4, NULL, NULL, NULL, 'https://github.com/bobwilliams');
+
+-- Inserting into favorites table
+INSERT INTO favorites (user_id, media_id) 
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (1, 3);
 
 
