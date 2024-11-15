@@ -25,7 +25,7 @@ class User extends Model {
     public function getUserByID($id) {
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -43,77 +43,43 @@ class User extends Model {
 
     /**
      * Function to insert a new user.
-     * @param string $cne
      * @param string $fname
      * @param string $lname
      * @param string $email
-     * @param string $username
      * @param string $password
-     * @param string $code
+     * @param string $token
      * @return bool
     */
-    public function createUser($fname, $lname, $email,$username, $password, $code) {
+    public function createUser($fname, $lname, $email, $password, $token) {
         // Check if email already exists
         if ($this->getUserByEmail($email)) {
             return false;
         }
 
-        // Hash the password
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        $passwordHash = hash('sha256', $password);
 
         // Insert a new user
-        $query = 'INSERT INTO ' . $this->table . ' (fname, lname, email,username, password, code, status) VALUES (:fname, :lname, :email,:username, :password, :code, "notverified")';
+        $query = 'INSERT INTO ' . $this->table . ' (fname, lname, email, password, verification_token) VALUES (:fname, :lname, :email, :password, :token)';
         $stmt = $this->db->prepare($query);
 
         $stmt->bindParam(':fname', $fname);
         $stmt->bindParam(':lname', $lname);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $passwordHash);
-        $stmt->bindParam(':code', $code);
+        $stmt->bindParam(':token', $token);
 
         return $stmt->execute();
     }
 
-
     /**
-     * 
-     * Function to check if a user already voted
-     * @param $email
+     * Verify user by token.
+     * @param string $token
      * @return bool
     */
-    public function userAlreadyVoted($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND vote=1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        $res = $stmt->fetchALL(PDO::FETCH_ASSOC);
-        return count($res) == 1;
-    }
-
-    /**
-     * 
-     * Function to set the vote column to 1
-     * @param string $id
-     * @return void
-    */
-
-    public function setVote($id){
-        $sql = "UPDATE {$this->table} SET vote=1 WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-    }
-
-    /**
-     * Verify user by code.
-     * @param string $code
-     * @return bool
-    */
-    public function verifyUser($code) {
-        $query = 'UPDATE ' . $this->table . ' SET status = "verified" WHERE code = :code AND status = "notverified"';
+    public function verifyUser($token) {
+        $query = 'UPDATE ' . $this->table . ' SET status = 1, verification_token = NULL WHERE verification_token = :token AND status = 0';
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':code', $code);
+        $stmt->bindParam(':token', $token);
 
         return $stmt->execute() && $stmt->rowCount() > 0;
     }
