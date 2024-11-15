@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     status BOOLEAN DEFAULT FALSE, -- Email verification status
-    verification_token VARCHAR(255) NULL, -- Token for email verification
+    verification_token VARCHAR(255) DEFAULT NULL, -- Token for email verification
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -110,12 +110,12 @@ CREATE TABLE IF NOT EXISTS favorites (
 -- Inserting sample data for the movies_db database with SHA-256 hashed passwords
 
 -- Inserting into users table with hashed passwords
-INSERT INTO users (fname, lname, email, password, status, verification_token) 
+INSERT INTO users (fname, lname, email, password) 
 VALUES
-    ('John', 'Doe', 'john.doe@example.com', SHA2('password123', 256), TRUE, NULL),
-    ('Jane', 'Smith', 'jane.smith@example.com', SHA2('securepassword', 256), FALSE, 'token123'),
-    ('Alice', 'Johnson', 'alice.johnson@example.com', SHA2('mysecretpassword', 256), TRUE, NULL),
-    ('Bob', 'Williams', 'bob.williams@example.com', SHA2('password456', 256), FALSE, 'token456');
+    ('John', 'Doe', 'john.doe@example.com', SHA2('password123', 256)),
+    ('Jane', 'Smith', 'jane.smith@example.com', SHA2('securepassword', 256)),
+    ('Alice', 'Johnson', 'alice.johnson@example.com', SHA2('mysecretpassword', 256)),
+    ('Bob', 'Williams', 'bob.williams@example.com', SHA2('password456', 256));
 
 -- Inserting into genres table
 INSERT INTO genres (name, description) 
