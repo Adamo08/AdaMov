@@ -21,16 +21,51 @@
         public function login() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
-                $email = $_POST['email'];
-                $password = $_POST['password'];
+                $email = sanitizeInput($_POST['email']);
+                $password = sanitizeInput($_POST['password']);
+        
+                // Validation: Check if fields are empty
+                if (empty($email) || empty($password)) {
+                    $data = ["failed" => "Both email and password are required."];
+                    $this->view('login', $data);
+                    return;
+                }
+        
+                // Validation: Check email format
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $data = ["failed" => "Invalid email format."];
+                    $this->view('login', $data);
+                    return;
+                }
+        
+                // Fetch user data by email
                 $user = new User();
                 $userData = $user->getUserByEmail($email);
+        
+                if ($userData) {
+                    // Verify password using SHA-256
+                    $hashedPassword = hash('sha256', $password);
+                    if ($hashedPassword === $userData['password']) {
+                        // Check if email is verified
+                        if ($userData['status'] === 1) {
+                            if (session_status() === PHP_SESSION_NONE){
+                                session_start();
+                            }
+                            $_SESSION['user_id'] = $userData['id'];
+                            $_SESSION['user_name'] = $userData['fname'] . ' ' . $userData['lname'];
+                            // header("Location: " . SITE_NAME . "/test");
+                            // exit();
 
-                if ($userData && password_verify($password, $userData['password'])) {
-                    if ($userData['status'] === 'verified') {
-                        
+                            $this->view('test',$userData);
+
+                        } else {
+
+                            $data = ["failed" => "Your email is not verified. Please check your email for the verification link."];
+                            $this->view('login', $data);
+
+                        }
                     } else {
-                        $data = ["failed" => "Your email is not verified. Please check your email for the verification link."];
+                        $data = ["failed" => "Login failed. Invalid email or password!"];
                         $this->view('login', $data);
                     }
                 } else {
@@ -39,8 +74,9 @@
                 }
             }
         }
-
+        
         public function register() {
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $fname = sanitizeInput($_POST['fname']);
                 $lname = sanitizeInput($_POST['lname']);
