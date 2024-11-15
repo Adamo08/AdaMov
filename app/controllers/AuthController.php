@@ -42,42 +42,60 @@
 
         public function register() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $fname = $_POST['fname'];
-                $lname = $_POST['lname'];
-                $email = $_POST['email'];
-                $username = $_POST['username'];
-                $password = $_POST['password'];
-                $verificationCode = bin2hex(random_bytes(16));
+                $fname = sanitizeInput($_POST['fname']);
+                $lname = sanitizeInput($_POST['lname']);
+                $email = sanitizeInput($_POST['email']);
+                $password = sanitizeInput($_POST['password']);
+                $token = generateRandomToken();
 
+                if (empty($fname) || empty($lname) || empty($email) || empty($password)) {
+                    $data = ["error" => "All fields are required. Please fill in all fields."];
+                    $this->view('register', $data);
+                    return;
+                }
+        
+                // Validate email format
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $data = ["error" => "Invalid email format."];
+                    $this->view('register', $data);
+                    return;
+                }
+        
                 $user = new User();
-
-                if ($user->createUser($fname, $lname, $email,$username, $password, $verificationCode)) {
-                    $verificationLink = SITE_NAME."verify.php?code=$verificationCode";
+        
+                if ($user->createUser($fname, $lname, $email, $password, $token)) {
+                    $verificationLink = SITE_NAME . "auth/verify/$token";
                     $this->emailService->sendVerificationEmail($email, $verificationLink);
                     $data = ["success" => "Registration successful. A verification email has been sent to your email address."];
                     $this->view('register', $data);
                 } else {
-                    $data = ["error" => "Registration failed.email might already be taken."];
+                    $data = ["error" => "Registration failed. The email might already be taken."];
                     $this->view('register', $data);
                 }
             }
         }
+        
+        
 
-        public function verify($code) {
-            session_start(); // Start session
+        /**
+         * A function that verifies a user by token
+         * 
+        */
+        public function verify($token) {
             $user = new User();
-            if ($user->verifyUser($code)) {
-
-                // Set success message in session
-                $_SESSION['success_message'] = "Email verified successfully, Login to your account!";
-                // Redirect to index page
-                // header("Location: " . SITE_NAME . "auth/index");
-                $this -> view('auth/login');
+        
+            if ($user->verifyUser($token)) {
+                $data = [
+                    'verify_success' => "Email verified successfully! Please log in to your account."
+                ];
+                $this->view('login', $data); // Pass data to the view
             } else {
-                echo 'Invalid or expired verification link.';
+                $data = [
+                    'error' => "Invalid or expired verification link."
+                ];
+                $this->view('error', $data); // Pass error message to the view
             }
         }
-
 
         /**
          * Function to logout
