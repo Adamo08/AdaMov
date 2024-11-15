@@ -1,5 +1,9 @@
 
-
+<?php 
+    if (session_status() === PHP_SESSION_NONE){
+        session_start();
+    }
+?>
 
 <pre>
     Test
@@ -8,6 +12,12 @@
 
         echo @$success;
         echo @$error;
+
+        echo @$id;
+        echo @$fname;
+        echo @$lname;
+
+        print_r($_SESSION);
 
     ?>
 </pre>
