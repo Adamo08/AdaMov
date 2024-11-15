@@ -27,14 +27,19 @@
                                 <?php echo $verify_success; unset($verify_success); ?>
                             </div>
                         <?php endif?>
+                        <?php if (isset($failed)): ?>
+                            <div class="alert alert-danger my-5">
+                                <?php echo $failed; unset($failed); ?>
+                            </div>
+                        <?php endif?>
                         <h3>Login</h3>
-                        <form action="#">
+                        <form action="<?=url("auth/login")?>" method="POST">
                             <div class="input__item">
-                                <input type="text" placeholder="Email address">
+                                <input type="text" name="email" placeholder="Email address">
                                 <span class="icon_mail"></span>
                             </div>
                             <div class="input__item">
-                                <input type="text" placeholder="Password">
+                                <input type="text" name="password" placeholder="Password">
                                 <span class="icon_lock"></span>
                             </div>
                             <button type="submit" class="site-btn">Login Now</button>
