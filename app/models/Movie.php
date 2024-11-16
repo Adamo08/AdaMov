@@ -19,6 +19,40 @@
         }
 
         /**
+         * Get trending movies based on views, comments, and release date
+         * @param int $limit Number of movies to return (default is 10)
+         * @param int $viewThreshold Minimum views count to consider as trending (default is 1000)
+         * @return array List of trending movies
+        */
+        public function getTrendingMovies($limit = 10, $viewThreshold = 1000) {
+            
+            $query = "
+                SELECT *
+                FROM 
+                    media m
+                WHERE 
+                    -- m.release_date >= CURDATE() - INTERVAL 1 MONTH   -- Movies released in the last month
+                    1 = 1
+                    AND 
+                    m.views_count >= :viewThreshold               -- Filter based on minimum views
+                ORDER BY 
+                    m.views_count DESC,                              -- Sort by views count (highest first)
+                    m.comments_count DESC,                           -- Then by comments count
+                    m.release_date DESC                              -- Then by release date (most recent first)
+                LIMIT :limit;                                       -- Limit the result set to the top trending movies
+            ";
+
+            // Prepare and execute the query
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(':viewThreshold', $viewThreshold, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Fetch the results and return them
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        /**
          * A function that returns the list of movies associated with the specified genre_id.
          * @param int $genre_id
          * @return array
