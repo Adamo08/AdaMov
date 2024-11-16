@@ -6,7 +6,7 @@
     {
         public function index()
         {
-            $data = ["name"=>"Home Page"];
+            $data = ["title"=>"Home Page"];
             $this->view('home',$data);
         }
     }
