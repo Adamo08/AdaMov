@@ -10,7 +10,7 @@
          * A function that returns the list of available genres
          * @return array
         */
-        public function all() {
+        public  function all() {
 
             $sql = "SELECT * FROM {$this->table}";
             $stmt = $this->db->prepare($sql);
@@ -18,6 +18,21 @@
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
             
         }
+
+        /**
+         * Fetches a limited number of genres from the database.
+         *
+         * @param int $limit The number of genres to retrieve. Default is 5.
+         * @return array An array of genres, each represented as an associative array.
+        */
+        public function getLimited($limit = 5) {
+            $query = "SELECT name FROM {$this->table} LIMIT :limit";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
 
         /**
          * A function that returns the id of a specific genre
@@ -33,5 +48,18 @@
 
             $result = $stmt->fetchColumn();
             return $result['id'];
+        }
+
+        /**
+         * Returns the genre name associated with the specified id
+         * @param int $id
+         * @return string
+        */
+        public function getName($id) {
+            $sql = "SELECT name FROM {$this->table} WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
         }
     }
