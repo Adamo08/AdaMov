@@ -9,12 +9,12 @@
         }
 
         public function index() {
-            $data = ["name" => "Login Page"];
+            $data = ["title" => "Login Page"];
             $this->view('login', $data);
         }
 
         public function signup() {
-            $data = ["name" => "Registration Page"];
+            $data = ["title" => "Registration Page"];
             $this->view('register', $data);
         }
 
@@ -53,10 +53,10 @@
                             }
                             $_SESSION['user_id'] = $userData['id'];
                             $_SESSION['user_name'] = $userData['fname'] . ' ' . $userData['lname'];
-                            // header("Location: " . SITE_NAME . "/test");
-                            // exit();
+                            header("Location: " . SITE_NAME);
+                            exit();
 
-                            $this->view('test',$userData);
+                            // $this->view('test',$userData);
 
                         } else {
 
