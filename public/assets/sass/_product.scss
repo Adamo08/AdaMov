@@ -16,15 +16,7 @@
   margin-bottom: 30px;
 }
 
-.trending__product {
-  margin-bottom: 50px;
-}
-
-.popular__product {
-  margin-bottom: 50px;
-}
-
-.recent__product {
+.section__product {
   margin-bottom: 50px;
 }
 
@@ -38,7 +30,7 @@
   border-radius: 5px;
 
   .ep {
-    font-size: 13px;
+    font-size: 10px;
     color: $white-color;
     background: $primary-color;
     display: inline-block;
