@@ -7,9 +7,9 @@ folder_path = './public/assets/videos'
 new_names = [
     "hood", "agent", "love_crosses", "sail_of_fate", "bloodfist",
     "baseball_tournament", "basketball_tournament", "a_man_with_black_hat",
-    "katana", "another_planet", "lionhearted_warior", "beyond_horizons", 
+    "katana", "another_planet", "lionhearted_warrior", "beyond_horizons", 
     "the_jungle_watcher", "night_party", "fauget", "driving_into_darkness", 
-    "mystic_of_castle", "the_great_mansion", "comming_soon", "scary_house", 
+    "mystic_of_castle", "the_great_mansion", "coming_soon", "scary_house", 
     "lights_out", "cosmos", "halloween", "ang_unang_aswang", "shadow_door", 
     "dark","multo"
 ]
