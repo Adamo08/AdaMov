@@ -55,15 +55,26 @@
         /**
          * A function that returns the list of movies associated with the specified genre_id.
          * @param int $genre_id
+         * @param int|null $limit (if not specified: all movies will be fetched)
          * @return array
         */
-        public function getMovies($genre_id){
-            $sql = "SELECT * FROM {$this->table} WHERE genre_id = :genre_id";
+        public function getMovies($genre_id, $limit = null) {
+            // Base query
+            $sql = "SELECT * FROM {$this->table} WHERE genre_id = :genre_id ORDER BY comments_count DESC, views_count DESC";
+
+            // Add LIMIT clause if a limit is specified
+            if ($limit !== null) {
+                $sql .= " LIMIT " . intval($limit);
+            }
+
+            // Prepare and execute the statement
             $stmt = $this->db->prepare($sql);
-            $stmt -> bindParam(':genre_id',$genre_id, PDO::PARAM_INT);
+            $stmt->bindParam(':genre_id', $genre_id, PDO::PARAM_INT);
             $stmt->execute();
+
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
 
         /**
          * A function that fetches a movie by its id
