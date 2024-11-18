@@ -43,12 +43,13 @@
         public function getId($genre) {
             $sql = "SELECT id FROM {$this->table} WHERE name = :name";
             $stmt = $this->db->prepare($sql);
-            $stmt -> bindColumn(':name', $genre, PDO::PARAM_STR);
+            $stmt->bindParam(':name', $genre, PDO::PARAM_STR);
             $stmt->execute();
-
+        
             $result = $stmt->fetchColumn();
-            return $result['id'];
+            return $result;
         }
+        
 
         /**
          * Returns the genre name associated with the specified id
@@ -61,5 +62,23 @@
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchColumn();
+        }
+
+        /**
+         * Fetches a row from the database using the specified genre
+         * @param string $genre
+         * @param array
+        */
+        public function getGenreByGenre($genre) {
+            // Prepare the SQL query
+            $sql = "SELECT * FROM {$this->table} WHERE name = :genre";
+            
+            // Prepare AND execute the query
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':genre', $genre, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Return the result as an array
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
