@@ -71,7 +71,7 @@
                                     <a href="<?php echo url('genres')?>">Genres<span class="arrow_carrot-down"></span></a>
                                     <ul class="dropdown">
                                     <?php foreach ($genres_names as $genre): ?>
-                                        <li><a href="<?php echo url('genres/' . $genre['name']); ?>"><?php echo $genre['name']; ?></a></li>
+                                        <li><a href="<?php echo url('genres/show/' . $genre['name']); ?>"><?php echo $genre['name']; ?></a></li>
                                     <?php endforeach; ?>
                                     </ul>
                                 </li>
