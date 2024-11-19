@@ -7,11 +7,12 @@
         $Movie = new Movie();
         $Review = new Review();
 
-        $genres = isset(($category)) 
-                    ?
-                        (array) $Genre->getGenreByGenre(ucfirst($category))
-                    : 
-                        $Genre->all();
+        if (isset($category) && strtolower($category) != "all" ){
+            $genres = (array) $Genre->getGenreByGenre(ucfirst($category));
+        }
+        else {
+            $genres = $Genre->all();
+        }
 
         $currentCategory = $category ?? "All";
         $categoryExists = !empty($genres);
@@ -87,7 +88,7 @@
                                                         </li>
                                                     </ul>
                                                     <h5>
-                                                        <a href="<?php echo url("movies/watch/".$movie['id'])?>">
+                                                        <a href="<?php echo url("movies/show/".$movie['id'])?>">
                                                             <?= $movie['title']?>
                                                         </a>
                                                     </h5>
@@ -109,6 +110,9 @@
                                 <div>
                                     <p style="margin: 0;">No movies found for the selected category. see <a href="<?php echo url("genres/")?>">All</a> instead</p>
                                 </div>
+                            </div>
+                            <div class="mt-4">
+                                <img src="<?php echo IMAGES?>no_movies.png" alt="No Movies Found">
                             </div>
                         </div>
                     <?php endif?>
