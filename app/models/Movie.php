@@ -84,13 +84,25 @@
 
         public function getMovieById($id){
             $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-            $stmt = $this->db->query($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt -> bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
+        /**
+         * Returns category_id of the movie
+         * @param int $id 
+         * @return int
+        */
+        public function getCategoryID($id){
+            $sql = "SELECT genre_id FROM {$this->table} WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
 
         /**
          * 
@@ -104,6 +116,7 @@
         */
         public function addMovie($title, $description, $release_date, $genre){
             $genre_obj = new Genre();
+            $genre_id = $genre_obj->getId($genre);
             $sql = "INSERT INTO 
                     {$this->table} 
                     (
@@ -125,7 +138,7 @@
             $stmt->bindParam(':title', $title);
             $stmt->bindParam(':description', $description);
             $stmt->bindParam(':release_date', $release_date);
-            $stmt->bindParam(':genre_id', $genre_obj->getId($genre));
+            $stmt->bindParam(':genre_id', $genre_id);
 
             return $stmt->execute();
 
