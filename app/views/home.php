@@ -100,7 +100,7 @@
                                                 </li>
                                             </ul>
                                             <h5>
-                                                <a href="<?php echo url("movies/watch/".$movie['id'])?>">
+                                                <a href="<?php echo url("movies/show/".$movie['id'])?>">
                                                     <?= $movie['title']?>
                                                 </a>
                                         </h5>
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <div class="btn__all">
-                                        <a href="<?php echo url("genres/".$genre['name']);?>" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                        <a href="<?php echo url("genres/show/".$genre['name']);?>" class="primary-btn">View All <span class="arrow_right"></span></a>
                                     </div>
                                 </div>
                             </div>
