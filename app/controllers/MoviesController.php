@@ -36,14 +36,18 @@
                 );
                 return;
             }
+
+            $related_movies = $MovieModel->getRelatedMovies($id, $movie['genre_id']);
         
             // Render the movie details view.
             $this->view(
                 'movie_details',
                 [
                     'title' => $movie['title'],
+                    'id' => $movie['id'],
                     'movie' => $movie,
-                    'category' => $GenresModel->getName($MovieModel->getCategoryID($id))
+                    'category' => $GenresModel->getName($MovieModel->getCategoryID($id)),
+                    'related_movies' => $related_movies
                 ]
             );
         }
