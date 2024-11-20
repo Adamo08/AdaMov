@@ -2,6 +2,13 @@
 
 
 
+    <?php 
+        $ReviewModel = new Review();
+        $UserModel = new User();
+        $reviews = $ReviewModel->getAllReviewsByMovie($id);
+    ?>
+
+
     <!-- Breadcrumb Begin -->
     <div class="breadcrumb-option">
         <div class="container">
@@ -24,7 +31,7 @@
     <section class="anime-details spad">
         <div class="container">
             <div class="anime__details__content">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="anime__details__pic set-bg" data-setbg="<?php echo ASSETS.$movie['thumbnail']?>">
                             <div class="comment">
@@ -84,15 +91,25 @@
                                 </div>
                             </div>
                             <div class="anime__details__btn">
-                                <a href="#" class="follow-btn" id="add_to_favorites">
+                                <a 
+                                    href="#" 
+                                    class="follow-btn btn <?= !$isLoggedIn ? 'disabled' : ''; ?>" 
+                                    id="add_to_favorites" 
+                                    <?= !$isLoggedIn ? 'aria-disabled="true"' : ''; ?>
+                                >
                                     <i class="fa fa-heart-o"></i> 
                                     <span>Add to favorites</span>
                                 </a>
-                                <a href="<?php echo url("movies/watch/".$movie['id'])?>" class="watch-btn">
+                                <a 
+                                    href="<?= $isLoggedIn ? url('movies/watch/' . $movie['id']) : '#'; ?>" 
+                                    class="watch-btn btn <?= !$isLoggedIn ? 'disabled' : ''; ?>" 
+                                    <?= !$isLoggedIn ? 'aria-disabled="true"' : ''; ?>
+                                >
                                     <span>Watch Now</span> 
                                     <i class="fa fa-angle-right"></i>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -103,62 +120,39 @@
                         <div class="section-title">
                             <h5>Reviews</h5>
                         </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-1.jpg" alt="">
+                        <?php if($isLoggedIn): ?>
+                            <?php if (!empty($reviews)):?>
+                                <?php foreach($reviews as $review): ?>
+                                    <div class="anime__review__item">
+                                        <div class="anime__review__item__pic">
+                                            <img src="<?=IMAGES?>anime/review-1.jpg" alt="">
+                                        </div>
+                                        <div class="anime__review__item__text">
+                                            <h6>
+                                                <?= ucfirst($UserModel->getfullName($review['user_id']))?>
+                                                <span>
+                                                    <?= getTimeAgo($ReviewModel->getReviewPassesSeconds($review['id']))?>
+                                                </span>
+                                            </h6>
+                                            <p><?= $review['review']?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach;?>
+                            <?php else:?>
+                                <div class="alert alert-info p-5">
+                                    <p>No reviews yet for this movie. Be the first one to comment</p>
+                                </div>
+                            <?php endif;?>
+                        <?php else: ?>
+                            <div class="alert alert-danger text-center p-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                <strong>Oops!</strong> You need to 
+                                <a href="<?php echo url('auth/'); ?>" class="alert-link" style="text-decoration: underline;">
+                                    log in
+                                </a> 
+                                to see the reviews for this movie.
                             </div>
-                            <div class="anime__review__item__text">
-                                <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                                <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                            </div>
-                        </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-2.jpg" alt="">
-                            </div>
-                            <div class="anime__review__item__text">
-                                <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                                <p>Finally it came out ages ago</p>
-                            </div>
-                        </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-3.jpg" alt="">
-                            </div>
-                            <div class="anime__review__item__text">
-                                <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                                <p>Where is the episode 15 ? Slow update! Tch</p>
-                            </div>
-                        </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-4.jpg" alt="">
-                            </div>
-                            <div class="anime__review__item__text">
-                                <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                                <p>whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL</p>
-                            </div>
-                        </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-5.jpg" alt="">
-                            </div>
-                            <div class="anime__review__item__text">
-                                <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                                <p>Finally it came out ages ago</p>
-                            </div>
-                        </div>
-                        <div class="anime__review__item">
-                            <div class="anime__review__item__pic">
-                                <img src="<?=IMAGES?>anime/review-6.jpg" alt="">
-                            </div>
-                            <div class="anime__review__item__text">
-                                <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                                <p>Where is the episode 15 ? Slow update! Tch</p>
-                            </div>
-                        </div>
+
+                        <?php endif; ?>
                     </div>
                     <div class="anime__details__form">
                         <div class="section-title">
@@ -166,7 +160,17 @@
                         </div>
                         <form action="#">
                             <textarea placeholder="Your Comment"></textarea>
-                            <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
+                            <?php if($isLoggedIn): ?>
+                                <button type="submit">
+                                    <i class="fa fa-location-arrow"></i> 
+                                    Review
+                                </button>
+                            <?php else: ?>
+                                <button type="submit" disabled>
+                                    <i class="fa fa-warning"></i> 
+                                    Login to add your review
+                                </button>
+                            <?php endif;?>
                         </form>
                     </div>
                 </div>
@@ -175,26 +179,22 @@
                         <div class="section-title">
                             <h5>you might like...</h5>
                         </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="<?=IMAGES?>sidebar/tv-1.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Boruto: Naruto next generations</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="<?=IMAGES?>sidebar/tv-2.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="<?=IMAGES?>sidebar/tv-3.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Sword art online alicization war of underworld</a></h5>
-                        </div>
-                        <div class="product__sidebar__view__item set-bg" data-setbg="<?=IMAGES?>sidebar/tv-4.jpg">
-                            <div class="ep">18 / ?</div>
-                            <div class="view"><i class="fa fa-eye"></i> 9141</div>
-                            <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
-                        </div>
+                        <?php foreach($related_movies as $related_movie): ?>
+                            <div class="product__sidebar__view__item set-bg" data-setbg="<?php echo ASSETS.$related_movie['thumbnail']?>">
+                                <div class="ep">
+                                    <?php displayRating($movie['id']); ?>
+                                </div>
+                                <div class="view">
+                                    <i class="fa fa-eye"></i>
+                                    <?php echo $related_movie['views_count']?>
+                                </div>
+                                <h5>
+                                    <a href="<?php echo url("movies/show/".$related_movie['id'])?>">
+                                        <?= $related_movie['title']?>
+                                    </a>
+                            </h5>
+                            </div>
+                        <?php endforeach;?>
                     </div>
                 </div>
             </div>
