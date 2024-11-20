@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fname VARCHAR(255) NOT NULL,
     lname VARCHAR(255) NOT NULL,
+    avatar VARCHAR(255) DEFAULT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     status BOOLEAN DEFAULT FALSE, -- Email verification status
@@ -46,22 +47,6 @@ CREATE TABLE IF NOT EXISTS media (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE SET NULL -- To avoid deleting media when a genre is removed
-);
-
---
--- Comments table
---
-CREATE TABLE IF NOT EXISTS comments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    media_id INT NOT NULL,
-    user_id INT NOT NULL,
-    comment TEXT NOT NULL,
-    parent_id INT DEFAULT NULL, -- For threaded replies
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE -- Deletes replies if the original comment is deleted
 );
 
 -- 
@@ -165,15 +150,6 @@ VALUES
     ('The Great Mansion', 'A drama surrounding the secrets of a grand mansion.', '2021-09-09', 3, 'thumbnails/the_great_mansion.jpg', 'videos/the_great_mansion.mp4', 9300, '1080p'),
     ('The Jungle Watcher', 'An action-adventure in the heart of the jungle.', '2023-11-17', 9, 'thumbnails/the_jungle_watcher.jpg', 'videos/the_jungle_watcher.mp4', 9200, '720p');
 
-
--- Inserting into comments table
-INSERT INTO comments (media_id, user_id, comment, parent_id) 
-VALUES
-    (1, 1, 'Loved this movie!', NULL),
-    (2, 2, 'This show is hilarious!', NULL),
-    (1, 3, 'Not my favorite action movie.', NULL),
-    (3, 4, 'The acting was superb.', NULL),
-    (4, 1, 'This movie gave me chills.', NULL);
 
 -- Inserting into reviews table
 INSERT INTO reviews (media_id, user_id, rating, review) 
