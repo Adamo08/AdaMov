@@ -1,5 +1,16 @@
     <?php require VIEWS."layouts/header.php"; ?>
 
+
+    <?php 
+        
+        if ($isLoggedIn){
+            // If a user is already logged in
+            header("Location: ".SITE_NAME);
+            exit();
+        }
+    
+    ?>
+
     <!-- Normal Breadcrumb Begin -->
     <section class="normal-breadcrumb set-bg" data-setbg="<?php echo IMAGES; ?>normal-breadcrumb.jpg">
         <div class="container">
