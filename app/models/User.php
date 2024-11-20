@@ -31,6 +31,22 @@ class User extends Model {
     }
 
     /**
+     * Returns the full name of a user
+     * @param int $id user ID
+     * @return string full name
+    */
+    public function getfullName($id){
+        // Base Query
+        $sql = "SELECT CONCAT(lname,' ', fname) FROM {$this->table} WHERE id = :id";
+        // Prepare AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+    /**
      * Get all users.
      * @return array
     */ 
