@@ -14,8 +14,8 @@
                     <div class="footer__nav">
                         <ul>
                             <li><a href="<?=url("genres")?>">Genres</a></li>
-                            <li><a href="<?=url("blog")?>">Our Blog</a></li>
-                            <li><a href="<?=url("contact")?>">Contacts</a></li>
+                            <li><a href="<?=url("home/about")?>">Our Blog</a></li>
+                            <li><a href="<?=url("home/contact")?>">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>

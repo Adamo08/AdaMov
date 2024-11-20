@@ -1,8 +1,9 @@
 <?php 
+
+    $isLoggedIn = false;
     if (session_status() == PHP_SESSION_NONE){
-        session_start();
         
-        $isLoggedIn = false;
+        session_start();
 
         if (isset($_SESSION['user_id'])){
             $isLoggedIn = true;
@@ -75,8 +76,8 @@
                                     <?php endforeach; ?>
                                     </ul>
                                 </li>
-                                <li><a href="<?=url("blog")?>">Our Blog</a></li>
-                                <li><a href="<?=url("contact")?>">Contacts</a></li>
+                                <li><a href="<?=url("home/about")?>">About</a></li>
+                                <li><a href="<?=url("home/contact")?>">Contact Us</a></li>
                             </ul>
                         </nav>
                     </div>
