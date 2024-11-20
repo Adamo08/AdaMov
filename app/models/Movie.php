@@ -105,6 +105,34 @@
         }
 
         /**
+         * Fetches 4 related movies to the movie with the given id.
+         * @param int $id
+         * @param int $genre_id
+         * @return array
+        */
+        public function getRelatedMovies($id, $genre_id){
+            
+            // Base Query
+            $sql = "
+                    SELECT * FROM {$this->table} 
+                    WHERE 
+                        genre_id = :genre_id
+                    AND 
+                        id != :id
+                    ORDER BY RAND()
+                    LIMIT 4
+            ";
+            // Prepare and Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':genre_id', $genre_id, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        }
+
+        /**
          * 
          * A function that adds a new movie (admin-only).
          * @param string $title Title of the movie
