@@ -156,7 +156,7 @@
                                                     </li>
                                                 </ul>
                                                 <h5>
-                                                    <a href="<?php echo url("movies/watch/".$movie['id'])?>">
+                                                    <a href="<?php echo url("movies/show/".$movie['id'])?>">
                                                         <?= $movie['title']?>
                                                     </a>
                                             </h5>
