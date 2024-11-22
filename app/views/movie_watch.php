@@ -1,6 +1,18 @@
 <?php require VIEWS."layouts/header.php"; ?>
 
 
+    <style>
+        .rating i {
+            font-size: 24px;
+            color: #ccc;
+        }
+
+        .rating i.hovered, .rating i.selected {
+            color: #f39c12;
+        }
+    </style>
+
+
     <?php 
 
         $ReviewModel = new Review();
@@ -74,55 +86,78 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="anime__details__review">
-                        <div class="section-title">
-                            <h5>Reviews</h5>
-                        </div>
-                        <?php if($isLoggedIn): ?>
-                            <?php if (!empty($reviews)):?>
-                                <?php foreach($reviews as $review): ?>
-                                    <div class="anime__review__item">
-                                        <div class="anime__review__item__pic">
-                                            <img src="<?=ASSETS.$UserModel->getAvatar($review['user_id'])?>" alt="">
-                                        </div>
-                                        <div class="anime__review__item__text">
-                                            <h6>
-                                                <?= ucfirst($UserModel->getfullName($review['user_id']))?>
-                                                <span>
-                                                    <?= getTimeAgo($ReviewModel->getReviewPassesSeconds($review['id']))?>
-                                                </span>
-                                            </h6>
-                                            <p><?= $review['review']?></p>
-                                        </div>
-                                    </div>
-                                <?php endforeach;?>
-                            <?php else:?>
-                                <div class="alert alert-info p-5">
-                                    <p>No reviews yet for this movie. Be the first one to comment</p>
-                                </div>
-                            <?php endif;?>
-                        <?php else: ?>
-                            <div class="alert alert-danger text-center p-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                <strong>Oops!</strong> You need to 
-                                <a href="<?php echo url('auth/'); ?>" class="alert-link" style="text-decoration: underline;">
-                                    log in
-                                </a> 
-                                to see the reviews for this movie.
+                            <div class="section-title">
+                                <h5>Reviews</h5>
                             </div>
-                        <?php endif; ?>
+                            <?php if($isLoggedIn): ?>
+                                <?php if (!empty($reviews)):?>
+                                    <?php foreach($reviews as $review): ?>
+                                        <div class="anime__review__item">
+                                            <div class="anime__review__item__pic">
+                                                <img src="<?=ASSETS.$UserModel->getAvatar($review['user_id'])?>" alt="">
+                                            </div>
+                                            <div class="anime__review__item__text">
+                                                <h6>
+                                                    <?= ucfirst($UserModel->getfullName($review['user_id']))?>
+                                                    <span>
+                                                        <?= getTimeAgo($ReviewModel->getReviewPassesSeconds($review['id']))?>
+                                                    </span>
+                                                </h6>
+                                                <p><?= $review['review']?></p>
+                                            </div>
+                                        </div>
+                                    <?php endforeach;?>
+                                <?php else:?>
+                                    <div class="alert alert-info p-5">
+                                        <p>No reviews yet for this movie. Be the first one to comment</p>
+                                    </div>
+                                <?php endif;?>
+                            <?php else: ?>
+                                <div class="alert alert-danger text-center p-3" role="alert" style="border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <strong>Oops!</strong> You need to 
+                                    <a href="<?php echo url('auth/'); ?>" class="alert-link" style="text-decoration: underline;">
+                                        log in
+                                    </a> 
+                                    to see the reviews for this movie.
+                                </div>
+
+                            <?php endif; ?>
                     </div>
                     <div class="anime__details__form">
                         <div class="section-title">
                             <h5>Your Comment</h5>
                         </div>
-                        <form action="#">
-                            <textarea placeholder="Your Comment" <?= !$isLoggedIn ? 'disabled' : ''; ?>></textarea>
+                        <form action="">
+                            <textarea 
+                                placeholder="Your Comment" <?= !$isLoggedIn ? 'disabled' : ''; ?>
+                                name="comment" 
+                                id="comment" 
+                            >
+                            </textarea>
+                            <!-- Star Rating Section -->
+                            <div class="rating mb-3" id="star_rating">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <i 
+                                        class="fa fa-star-o" 
+                                        data-rating="<?= $i; ?>" 
+                                        style="cursor: pointer;"
+                                    ></i>
+                                <?php endfor; ?>
+                            </div>
+                            <input type="hidden" id="rating_value" name="rating" value="0">
+
                             <?php if($isLoggedIn): ?>
-                                <button type="submit">
+                                <button 
+                                    type="button"
+                                    id="add_comment"
+                                    data-movie-id="<?= $id; ?>"
+                                    data-user-id="<?= @$_SESSION['user_id']; ?>"
+                                >
                                     <i class="fa fa-location-arrow"></i> 
                                     Review
                                 </button>
                             <?php else: ?>
-                                <button type="submit" disabled>
+                                <button type="text" disabled>
                                     <i class="fa fa-warning"></i> 
                                     Login to add your review
                                 </button>
@@ -134,5 +169,11 @@
         </div>
     </section>
     <!-- Anime Section End -->
+
+    <!-- Jquery  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Script js to handle adding movies to favorites  -->
+    <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 <?php require VIEWS."layouts/footer.php"; ?>
