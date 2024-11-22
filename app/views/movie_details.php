@@ -96,6 +96,8 @@
                                     class="follow-btn btn <?= !$isLoggedIn ? 'disabled' : ''; ?>" 
                                     id="add_to_favorites" 
                                     <?= !$isLoggedIn ? 'aria-disabled="true"' : ''; ?>
+                                    data-movie-id="<?= $id; ?>"
+                                    data-user-id="<?= @$_SESSION['user_id']; ?>"
                                 >
                                     <i class="fa fa-heart-o"></i> 
                                     <span>Add to favorites</span>
@@ -125,7 +127,7 @@
                                 <?php foreach($reviews as $review): ?>
                                     <div class="anime__review__item">
                                         <div class="anime__review__item__pic">
-                                            <img src="<?=IMAGES?>anime/review-1.jpg" alt="">
+                                            <img src="<?=ASSETS.$UserModel->getAvatar($review['user_id'])?>" alt="">
                                         </div>
                                         <div class="anime__review__item__text">
                                             <h6>
@@ -159,7 +161,7 @@
                             <h5>Your Comment</h5>
                         </div>
                         <form action="#">
-                            <textarea placeholder="Your Comment"></textarea>
+                            <textarea placeholder="Your Comment" <?= !$isLoggedIn ? 'disabled' : ''; ?>></textarea>
                             <?php if($isLoggedIn): ?>
                                 <button type="submit">
                                     <i class="fa fa-location-arrow"></i> 
@@ -189,7 +191,10 @@
                                     <?php echo $related_movie['views_count']?>
                                 </div>
                                 <h5>
-                                    <a href="<?php echo url("movies/show/".$related_movie['id'])?>">
+                                    <a 
+                                        href="<?php echo url("movies/show/".$related_movie['id'])?>"
+                                        class="px-2 bg-success text-white rounded"
+                                    >
                                         <?= $related_movie['title']?>
                                     </a>
                             </h5>

@@ -47,6 +47,21 @@ class User extends Model {
     }
 
     /**
+     * Returns the avatar for the specified user
+     * @param int $id user's ID
+     * @return string 
+    */
+    public function getAvatar($id){
+        // Base Query
+        $sql = "SELECT avatar FROM {$this->table} WHERE id = :id";
+        // Prepare AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    /**
      * Get all users.
      * @return array
     */ 

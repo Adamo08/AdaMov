@@ -8,7 +8,9 @@
         if (isset($_SESSION['user_id'])){
             $isLoggedIn = true;
             $userId = $_SESSION['user_id'];
+            $UserModel = new User();
             $full_name = $_SESSION['user_name'];
+            $avatar = $UserModel -> getAvatar($userId);
         }
 
     }
@@ -92,7 +94,7 @@
                                 <ul>
                                     <li>
                                         <img 
-                                            src="https://via.placeholder.com/100" 
+                                            src="<?=ASSETS.$avatar?>" 
                                             alt="Avatar"
                                             width="40"
                                             height="40"
