@@ -82,7 +82,9 @@
                                                 </div>
                                                 <div class="product__item__text">
                                                     <ul>
-                                                        <li class="bg-success">Active</li>
+                                                        <li class="bg-<?= ($movie['status'] == "available") ? "success" : "danger"?>">
+                                                            <?= $movie['status']?>
+                                                        </li>
                                                         <li>
                                                             <?= $Genre->getName($movie['genre_id']) ?>
                                                         </li>
