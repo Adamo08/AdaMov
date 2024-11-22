@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     media_id INT NOT NULL,
     user_id INT NOT NULL,
-    rating INT CHECK (rating >= 1 AND rating <= 5), -- Rating from 1 to 5
+    rating INT DEFAULT NULL CHECK (rating >= 1 AND rating <= 5), -- Rating from 1 to 5
     review TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
