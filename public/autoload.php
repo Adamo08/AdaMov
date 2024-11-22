@@ -17,11 +17,12 @@
     define("BASE_URL", '/AdaMov/public/');
     define("ASSETS", BASE_URL . 'assets/');
     define("IMAGES", ASSETS . 'images/');
+    define("AVATARS", ASSETS . 'avatars/');
+    define("VIDEOS", ASSETS . 'videos/');
     define("CSS", ASSETS . 'css/');
     define("FONTS", ASSETS . 'fonts/');
     define("JS", ASSETS . 'js/');
     define("SASS", ASSETS . 'sass/');
-    define("VIDEOS", ASSETS . 'videos/');
 
 
 
