@@ -75,6 +75,36 @@
             return $stmt->fetchColumn();
         }
 
+        /**
+         * Adds a new review to a movie.
+         * @param int $userId The reviewer's ID
+         * @param int $movieId The movie's ID
+         * @param string $commnet The review or comment for the movie
+         * @param int $rating The rating for the movie
+         * @return bool True on success (review added), false on failure.
+        */
+        public function addReview($userId, $movieId, $comment, $rating) {
+            // Base query
+            $sql = "
+                INSERT INTO {$this->table} (user_id, media_id, rating, review)
+                VALUES (:user_id, :movie_id, :rating, :review)
+            ";
+
+            // Prepare, Bind, and Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':movie_id', $movieId, PDO::PARAM_INT);
+            $stmt->bindParam(':rating', $rating, PDO::PARAM_INT);
+            $stmt->bindParam(':review', $comment, PDO::PARAM_STR);
+            
+            try {
+                return $stmt->execute();
+            } catch (PDOException $e) {
+                error_log('Database Error: ' . $e->getMessage());
+                return false;
+            }            
+        }
+
 
 
     }
