@@ -1,5 +1,15 @@
 <?php require VIEWS."layouts/header.php"; ?>
 
+    <style>
+        .rating i {
+            font-size: 24px;
+            color: #ccc;
+        }
+
+        .rating i.hovered, .rating i.selected {
+            color: #f39c12;
+        }
+    </style>
 
 
     <?php 
@@ -160,15 +170,37 @@
                         <div class="section-title">
                             <h5>Your Comment</h5>
                         </div>
-                        <form action="#">
-                            <textarea placeholder="Your Comment" <?= !$isLoggedIn ? 'disabled' : ''; ?>></textarea>
+                        <form action="">
+                            <textarea 
+                                placeholder="Your Comment" <?= !$isLoggedIn ? 'disabled' : ''; ?>
+                                name="comment" 
+                                id="comment" 
+                            >
+                            </textarea>
+                            <!-- Star Rating Section -->
+                            <div class="rating mb-3" id="star_rating">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <i 
+                                        class="fa fa-star-o" 
+                                        data-rating="<?= $i; ?>" 
+                                        style="cursor: pointer;"
+                                    ></i>
+                                <?php endfor; ?>
+                            </div>
+                            <input type="hidden" id="rating_value" name="rating" value="0">
+
                             <?php if($isLoggedIn): ?>
-                                <button type="submit">
+                                <button 
+                                    type="button"
+                                    id="add_comment"
+                                    data-movie-id="<?= $id; ?>"
+                                    data-user-id="<?= @$_SESSION['user_id']; ?>"
+                                >
                                     <i class="fa fa-location-arrow"></i> 
                                     Review
                                 </button>
                             <?php else: ?>
-                                <button type="submit" disabled>
+                                <button type="text" disabled>
                                     <i class="fa fa-warning"></i> 
                                     Login to add your review
                                 </button>
@@ -207,12 +239,11 @@
     </section>
     <!-- Anime Section End -->
 
-    <!-- This Comment For test  -->
 
     <!-- Jquery  -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Script js to handle adding movies to favorites  -->
-    <script src="<?php echo JS;?>add_to_favorites.js"></script>
+    <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 <?php require VIEWS."layouts/footer.php"; ?>
