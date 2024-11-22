@@ -140,7 +140,10 @@
         public function logout(){
             session_start();
             session_destroy();
-            $this->view('login');
+            $this->view(
+                'login',
+                ['title' => 'Logging Out']
+            );
         }
 
     }
