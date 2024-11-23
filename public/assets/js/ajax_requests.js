@@ -146,7 +146,37 @@ $(document).ready(function () {
         e.preventDefault();
 
         let review_id = $(this).data("review-id");
-        alert(`Comment removed ${review_id}`);
+        let commentContainer = $(this).closest(".anime__review__item");
+    
+        if (!confirm("Are you sure you want to delete this comment?")) {
+            return;
+        }
+
+        // Send data via AJAX
+        $.ajax({
+            url: "http://localhost/AdaMov/public/reviews/deleteReview",
+            type: "POST",
+            data: {
+                review_id: review_id
+            },
+            success: function (response) {
+                let data = JSON.parse(response);
+                if (data.success) {
+                    alert(data.message);
+                    commentContainer.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("XHR:", xhr);
+                console.error("Status:", status);
+                console.error("Error:", error);
+                alert("An error occurred while deleting your comment.");
+            }
+        });
 
     });
 
