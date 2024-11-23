@@ -16,8 +16,7 @@
     }
 
     $Genre = new Genre();
-    $genres_names = $Genre->getLimited(6); // 6 names
-
+    $genres_names = $Genre->getLimited(6);
 ?>
 
 <!DOCTYPE html>
