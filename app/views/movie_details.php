@@ -25,10 +25,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
-                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
-                        <a href="./categories.html">Categories</a>
+                        <a href="<?php echo url("")?>"><i class="fa fa-home"></i> Home</a>
+                        <a href="<?php echo url("genres/")?>">Categories</a>
                         <span>
-                            <?php echo $category; ?>
+                            <a href="<?php echo url("genres/show/".$category)?>">
+                                <?php echo $category; ?>
+                            </a>
                         </span>
                     </div>
                 </div>
@@ -137,16 +139,62 @@
                                 <?php foreach($reviews as $review): ?>
                                     <div class="anime__review__item">
                                         <div class="anime__review__item__pic">
-                                            <img src="<?=ASSETS.$UserModel->getAvatar($review['user_id'])?>" alt="">
+                                            <img 
+                                                src="<?php 
+                                                    $avatar = $UserModel->getAvatar($review['user_id']);
+                                                    if (!empty($avatar)) {
+                                                        echo ASSETS . $avatar; 
+                                                    } else {
+                                                        $full_name = $UserModel->getFullName($review['user_id']);
+                                                        echo 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&rounded=true&name=' . urlencode($full_name);
+                                                    }
+                                                ?>" 
+                                                alt=""
+                                            >
                                         </div>
                                         <div class="anime__review__item__text">
-                                            <h6>
-                                                <?= ucfirst($UserModel->getfullName($review['user_id']))?>
-                                                <span>
-                                                    <?= getTimeAgo($ReviewModel->getReviewPassesSeconds($review['id']))?>
-                                                </span>
+                                            <h6 class="d-flex align-items-center justify-content-between">
+                                                        
+                                                <div class="review-info">
+                                                    <?= ucfirst($UserModel->getfullName($review['user_id'])) ?>
+                                                    <span>
+                                                        <span>
+                                                            (<?php echo $review['rating']; ?>
+                                                            <i class="fa fa-star fa-solid text-warning"></i>)
+                                                        </span>
+                                                        <?= getTimeAgo($ReviewModel->getReviewPassesSeconds($review['id'])) ?>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Check if the current user is the one who posted the review -->
+                                                <?php if ($userId == $review['user_id']): ?>
+                                                    <div class="review-actions">
+                                                        
+                                                        <!-- Delete Icon -->
+                                                        <a 
+                                                            class="review-action-icon mx-1" 
+                                                            title="Delete Review"
+                                                            id="delete_review"
+                                                            data-review-id = "<?php echo $review['id']?>"
+                                                        >
+                                                            <i class="fa fa-trash text-danger" style="font-size: 20px; cursor:pointer;"></i>
+                                                        </a>
+
+                                                        <!-- Update Icon -->
+                                                        <a 
+                                                            class="review-action-icon" 
+                                                            id="update-review"
+                                                            title="Update Review"
+                                                            data-review-id = "<?php echo $review['id']?>"
+                                                        >
+                                                            <i class="fa fa-edit text-info" style="font-size: 20px; cursor:pointer;"></i>
+                                                        </a>
+
+                                                    </div>
+                                                <?php endif; ?>
+
                                             </h6>
-                                            <p><?= $review['review']?></p>
+                                            <p><?= $review['review'] ?></p>
                                         </div>
                                     </div>
                                 <?php endforeach;?>
