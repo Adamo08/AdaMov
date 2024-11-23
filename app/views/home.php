@@ -13,6 +13,10 @@
 
         // Trending movies
         $trending_movies = $Movie->getTrendingMovies(6,500);
+
+        $user_id = $isLoggedIn ? $_SESSION['user_id'] : 0;
+
+        $recommended_movies = $Movie->recommendMoviesForUser($user_id);
         
     
     ?>
@@ -40,7 +44,13 @@
                                     <p>
                                         <?= $movie['description'] ?>
                                     </p>
-                                    <a href="<?php echo url("movies/watch/".$movie['id'])?>"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>
+                                    <a 
+                                        href="<?php echo url("movies/watch/".$movie['id'])?>"
+                                        class="btn <?= !$isLoggedIn ? 'disabled' : ''; ?>"
+                                    >
+                                        <span>Watch Now</span> 
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +104,7 @@
                                         </div>
                                         <div class="product__item__text">
                                             <ul>
-                                                <li class="bg-success">
+                                                <li class="bg-<?= ($movie['status'] == "available") ? "success" : "danger"?>">
                                                     <?= $movie['status']?>
                                                 </li>
                                                 <li>
@@ -186,58 +196,49 @@
                         <div class="section-title">
                             <h5>For You</h5>
                         </div>
-                        <div class="product__sidebar__comment__item">
-                            <div class="product__sidebar__comment__item__pic">
-                                <img src="assets/images/sidebar/comment-1.jpg" alt="">
-                            </div>
-                            <div class="product__sidebar__comment__item__text">
-                                <ul>
-                                    <li>Active</li>
-                                    <li>Movie</li>
-                                </ul>
-                                <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
-                                <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                            </div>
-                        </div>
-                        <div class="product__sidebar__comment__item">
-                            <div class="product__sidebar__comment__item__pic">
-                                <img src="assets/images/sidebar/comment-2.jpg" alt="">
-                            </div>
-                            <div class="product__sidebar__comment__item__text">
-                                <ul>
-                                    <li>Active</li>
-                                    <li>Movie</li>
-                                </ul>
-                                <h5><a href="#">Shirogane Tamashii hen Kouhan sen</a></h5>
-                                <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                            </div>
-                        </div>
-                        <div class="product__sidebar__comment__item">
-                            <div class="product__sidebar__comment__item__pic">
-                                <img src="assets/images/sidebar/comment-3.jpg" alt="">
-                            </div>
-                            <div class="product__sidebar__comment__item__text">
-                                <ul>
-                                    <li>Active</li>
-                                    <li>Movie</li>
-                                </ul>
-                                <h5><a href="#">Kizumonogatari III: Reiket su-hen</a></h5>
-                                <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                            </div>
-                        </div>
-                        <div class="product__sidebar__comment__item">
-                            <div class="product__sidebar__comment__item__pic">
-                                <img src="assets/images/sidebar/comment-4.jpg" alt="">
-                            </div>
-                            <div class="product__sidebar__comment__item__text">
-                                <ul>
-                                    <li>Active</li>
-                                    <li>Movie</li>
-                                </ul>
-                                <h5><a href="#">Monogatari Series: Second Season</a></h5>
-                                <span><i class="fa fa-eye"></i> 19.141 Viewes</span>
-                            </div>
-                        </div>
+                        <?php if ($isLoggedIn): ?>
+                            <?php if (!empty($recommended_movies)): ?>
+                                <?php foreach ($recommended_movies as $movie): ?>
+                                    <div class="product__sidebar__comment__item d-flex align-items-center">
+                                        <div class="product__sidebar__comment__item__pic">
+                                            <img 
+                                                src="<?php echo ASSETS.htmlspecialchars($movie['thumbnail'])?>" 
+                                                alt="<?php echo htmlspecialchars($movie['title']); ?>"
+                                                width="100" 
+                                                height="150"
+                                            >
+                                        </div>
+                                        <div class="product__sidebar__comment__item__text">
+                                            <ul>
+                                                <li class="bg-<?= ($movie['status'] == "available") ? "success" : "danger"?>">
+                                                    <?= $movie['status']?>
+                                                </li>
+                                                <li>
+                                                    <?= $Genre->getName($Movie->getMovieGenre($movie['id']))?>
+                                                </li>
+                                            </ul>
+                                            <h5>
+                                                <a 
+                                                    href="<?php echo url("movies/show/".$movie['id'])?>"
+                                                >
+                                                    <?php echo htmlspecialchars($movie['title']); ?>
+                                                </a>
+                                            </h5>
+                                            <span>
+                                                <i class="fa fa-eye"></i> 
+                                                <?php echo htmlspecialchars($movie['views_count']); ?> Views
+                                            </span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div class="alert alert-info">
+                                    No recommended movies available at the moment.
+                                </div>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <p>Please log in to see movie recommendations.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
 
