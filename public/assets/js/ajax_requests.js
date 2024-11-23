@@ -1,12 +1,12 @@
 $(document).ready(function () {
-    
-    
-    
+
+
+
     /*------------------------
     Add Movie to favorites
     --------------------------*/
 
-    $("#add_to_favorites").on("click", function(e) {
+    $("#add_to_favorites").on("click", function (e) {
 
         e.preventDefault();
 
@@ -18,10 +18,10 @@ $(document).ready(function () {
             url: "http://localhost/AdaMov/public/favorites/addToFavorites",
             type: 'POST',
             data: {
-                user_id: user_id, 
+                user_id: user_id,
                 movie_id: movie_id
             },
-            success: function(response) {
+            success: function (response) {
 
                 var data = JSON.parse(response);
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
                     alert(data.message);
                 }
             },
-            error: function() {
+            error: function () {
                 alert("An error occurred while adding to favorites.");
             }
         });
@@ -42,17 +42,17 @@ $(document).ready(function () {
         Remove Movie from favorites
     -------------------------------*/
 
-    $("#remove_from_favorites").on("click", function(e) {
+    $("#remove_from_favorites").on("click", function (e) {
         alert("Movie has been removed");
     });
 
-    
-    
-    
+
+
+
     /*----------------------------
         Adding reviews for Movies
     ------------------------------*/
-    
+
     let rating = 0;
 
     // Star Rating: Mouseover Highlight
@@ -135,6 +135,19 @@ $(document).ready(function () {
                 alert("An error occurred while adding the comment and rating.");
             }
         });
+    });
+
+
+    /****************************
+     *  Remove review (comment) *
+     ****************************/
+    $("#delete_review").on("click", function (e) {
+        
+        e.preventDefault();
+
+        let review_id = $(this).data("review-id");
+        alert(`Comment removed ${review_id}`);
+
     });
 
 
