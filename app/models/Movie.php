@@ -132,6 +132,82 @@
 
         }
 
+
+        /**
+         * Recommends movies for a specific user based on their favorite genres.
+         *
+         * @param int $user_id The ID of the user.
+         * @return array A list of recommended movies.
+        */
+        public function recommendMoviesForUser($user_id)
+        {
+            // Instantiate the Favorite model
+            $favoriteModel = new Favorite();
+
+            // Step 1: Get the list of favorite movie IDs for the user
+            $favoriteMovies = $favoriteModel->getFavoritesByUser($user_id);
+
+            if (empty($favoriteMovies)) {
+                // If no favorites found
+                return [];
+            }
+
+            // Step 2: Extract movie IDs and fetch genres for those movies
+            $favoriteMovieIds = array_column($favoriteMovies, 'media_id');
+            $favoriteGenres = [];
+
+            // Loop through favorite movie IDs and fetch their genres
+            foreach ($favoriteMovieIds as $movieId) {
+                $genreId = $this->getMovieGenre($movieId);
+                if ($genreId !== null) {
+                    $favoriteGenres[] = $genreId;
+                }
+            }
+
+            // Remove duplicate genre IDs (if any, for safety)
+            $favoriteGenres = array_unique($favoriteGenres);
+            if (empty($favoriteGenres)) {
+                // If no genres are found
+                return [];
+            }
+
+            // Step 3: Recommend movies in the same genres but exclude already-favorite movies
+            $genrePlaceholders = implode(',', array_fill(0, count($favoriteGenres), '?'));
+            $excludePlaceholders = implode(',', array_fill(0, count($favoriteMovieIds), '?'));
+
+            $recommendationQuery = "
+                SELECT DISTINCT m.* 
+                FROM media m
+                JOIN genres g ON m.genre_id = g.id
+                WHERE g.id IN ($genrePlaceholders)
+                AND m.id NOT IN ($excludePlaceholders)
+                ORDER BY RAND()
+                LIMIT 6
+            ";
+            $stmt = $this->db->prepare($recommendationQuery);
+            $stmt->execute(array_merge($favoriteGenres, $favoriteMovieIds));
+
+            // Step 4: Return the list of recommended movies
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        /**
+         * Fetches the genre ID associated with a specific movie.
+         *
+         * @param int $movieId The ID of the movie.
+         * @return int|null The genre ID if found, otherwise null.
+         */
+        public function getMovieGenre($movieId)
+        {
+            $query = "SELECT genre_id FROM {$this->table} WHERE id = :id LIMIT 1";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
+
+
         /**
          * 
          * A function that adds a new movie (admin-only).
