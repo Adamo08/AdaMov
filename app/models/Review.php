@@ -106,5 +106,46 @@
         }
 
 
+        /**
+         * Removes a review from the database
+         * @param int $id Review ID
+         * @return bool True on success, false on failure
+        */
+        public function deleteReview($id) {
+            // Base Query
+            $sql = "DELETE FROM {$this->table} WHERE id = :id";
 
-    }
+            // Prepare the statement
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            
+            return $stmt->execute();
+        }
+
+
+        /**
+         * Checks if a user has already reviewed a specific media.
+         *
+         * @param int $userId The ID of the user.
+         * @param int $mediaId The ID of the media.
+         * @return bool Returns true if the user has already reviewed the media, false otherwise.
+         */
+        public function inReviews($userId, $mediaId) {
+            // Base Query
+            $query = "SELECT COUNT(*) FROM {$this->table} WHERE user_id = :user_id AND media_id = :media_id";
+            $stmt = $this->db->prepare($query);
+            
+            // Bind the parameters to the query
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':media_id', $mediaId, PDO::PARAM_INT);
+            
+            // Execute the query
+            $stmt->execute();
+            
+            $result = $stmt->fetchColumn();
+            
+            return $result > 0;
+        }
+
+}
