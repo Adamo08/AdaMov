@@ -94,7 +94,17 @@
                                 <ul>
                                     <li>
                                         <img 
-                                            src="<?=ASSETS.$avatar?>" 
+                                            src="
+                                                <?php 
+                                                    if (!empty($avatar)) {
+                                                        echo ASSETS . $avatar; 
+                                                    } else {
+                                                        // $initials = strtoupper(substr($full_name, 0, 1)) . strtoupper(substr(strrchr($full_name, ' '), 1, 1));
+                                                        // echo "https://via.placeholder.com/40?text=" . urlencode($initials);
+                                                        echo 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&rounded=true&name=' . urlencode($full_name);
+                                                    }
+                                                ?>
+                                            " 
                                             alt="Avatar"
                                             width="40"
                                             height="40"
