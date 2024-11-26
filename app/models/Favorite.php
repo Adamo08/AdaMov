@@ -26,6 +26,33 @@
         }
 
         /**
+         * Fetches 3 recently rdded ravorites by the user
+         * @param int $user_id
+         * @return array|null
+         * 
+        */
+        public function getRecentFavorites(int $user_id): ?array{
+            // Base Query
+            $sql = "
+                    SELECT media_id 
+                    FROM {$this->table} 
+                    WHERE user_id = :id 
+                    ORDER BY created_at DESC
+                    LIMIT 3
+            ";
+
+            // Prepare, bind and execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            // Fetch results
+            $recent_favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $recent_favorites ?: null;
+
+        }
+
+        /**
          * Adds a movie to the user’s favorites.
          * 
          * @param int $id User's ID.
