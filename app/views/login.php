@@ -12,7 +12,7 @@
     ?>
 
     <!-- Normal Breadcrumb Begin -->
-    <section class="normal-breadcrumb set-bg" data-setbg="<?php echo IMAGES; ?>normal-breadcrumb.jpg">
+    <section class="normal-breadcrumb set-bg" data-setbg="<?php echo IMAGES; ?>normal-breadcrumb_2.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
