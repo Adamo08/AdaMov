@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     fname VARCHAR(255) NOT NULL,
     lname VARCHAR(255) NOT NULL,
     avatar VARCHAR(255) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     status BOOLEAN DEFAULT FALSE, -- Email verification status
