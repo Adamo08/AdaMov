@@ -3,6 +3,7 @@
 
 class User extends Model {
     protected $table = 'users';
+    protected $links_table = 'user_social_links';
 
     /**
      * Get a user by their email.
@@ -70,6 +71,23 @@ class User extends Model {
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Fetches user social links
+     * @param int $user_id
+     * @return array
+    */
+    public function getUserSocialLinks($user_id) {
+        // Base query
+        $sql = "SELECT * FROM {$this->links_table}  WHERE user_id = :id LIMIT 1";
+        // Prepare, Bind AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result : [];
     }
 
     /**
