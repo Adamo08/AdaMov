@@ -12,7 +12,7 @@
     ?>
 
     <!-- Normal Breadcrumb Begin -->
-    <section class="normal-breadcrumb set-bg" data-setbg="<?php echo IMAGES; ?>normal-breadcrumb.jpg">
+    <section class="normal-breadcrumb set-bg" data-setbg="<?php echo IMAGES; ?>normal-breadcrumb_2.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -32,7 +32,7 @@
             <div class="row">
                 <!-- Image Column -->
                 <div class="col-md-6 d-flex align-items-center justify-content-center">
-                    <img src="https://via.placeholder.com/400x400" alt="Placeholder Image" class="img-fluid">
+                    <img src="<?php echo IMAGES?>welcome_register.jpg" alt="Placeholder Image" class="img-fluid">
                 </div>
                 <!-- Signup Form Column -->
                 <div class="col-md-6">
