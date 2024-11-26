@@ -43,7 +43,20 @@ $(document).ready(function () {
     -------------------------------*/
 
     $("#remove_from_favorites").on("click", function (e) {
-        alert("Movie has been removed");
+        e.preventDefault();
+
+        var user_id = $(this).data("user-id");
+        var movie_id = $(this).data("movie-id");
+
+        if (!confirm("Are you sure you want to remove this movie from favorites?")) {
+            return;
+        }
+
+        // Send Ajax Request Otherwise
+        // We are here
+        alert(`user id : ${user_id} movie id : ${movie_id}`);
+
+
     });
 
 
