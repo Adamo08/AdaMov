@@ -1,7 +1,5 @@
 <?php require VIEWS."layouts/header.php"; ?>
 
-    <?php $i=0; ?>
-
 
     <div class="container text-white">
         <div class="main-body">
@@ -31,7 +29,7 @@
                                                 echo 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&rounded=true&name=' . urlencode($user['fname'].' '.$user['lname']);
                                             }
                                         ?>"
-                                    alt="Admin" 
+                                    alt="Avatar" 
                                     class="rounded-circle mb-3" 
                                     width="150"
                                 >
@@ -43,7 +41,10 @@
                                         <?php echo $user['address']; ?>
                                     </p>
                                     <!-- Custom File Input -->
-                                    <label for="avatarUpload" class="btn btn-primary btn-sm mt-2">
+                                    <label 
+                                        for="avatarUpload" 
+                                        class="btn btn-primary btn-sm mt-2"
+                                    >
                                         Upload New Avatar
                                     </label>
                                     <input 
@@ -142,6 +143,7 @@
                                             </thead>
                                             <tbody>
                                                 <?php if(!empty($recent_favorites)):?>
+                                                    <?php $i = 0; ?>
                                                     <?php foreach($recent_favorites as $favorite): ?>
                                                         <tr>
                                                             <th scope="row"><?= ++$i ?></th>
@@ -165,11 +167,10 @@
                                                                     <i class="fa fa-eye"></i>
                                                                 </a>
                                                                 <button 
-                                                                    class="btn btn-link text-danger p-0" 
+                                                                    class="btn btn-link text-danger remove_from_favorites p-0" 
                                                                     title="Delete"
-                                                                    id="remove_from_favorites"
                                                                     data-user-id="<?php echo $userId?>"
-                                                                    data-media-id="<?php echo $favorite['id']?>"
+                                                                    data-movie-id="<?php echo $favorite['id']?>"
                                                                 >
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
@@ -198,27 +199,88 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                <form id="updateProfileForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- First Name -->
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <div class="input-group">
+                                <input 
+                                    type="text" class="form-control" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    placeholder="First Name" 
+                                    value="<?php echo $user['fname']; ?>" 
+                                    required
+                                >
+                                <div class="invalid-feedback">Please provide a valid first name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" value="<?php echo $user['lname']; ?>" required>
+                                <div class="invalid-feedback">Please provide a valid last name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-group">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<?php echo $user['email']; ?>" required>
+                                <div class="invalid-feedback">Please provide a valid email address.</div>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="address" name="address" placeholder="Address" value="<?php echo $user['address']; ?>" required>
+                                <div class="invalid-feedback">Please provide a valid address.</div>
+                            </div>
+                        </div>
+                        <!-- Social Links -->
+                        <h6 class="mt-4">Social Profiles</h6>
+                        <?php foreach ($social_links as $key => $value): ?>
+                            <div class="form-group">
+                                <label for="social_<?php echo $key; ?>"><?php echo ucfirst($key); ?></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-<?php echo strtolower($key); ?>"></i></span>
+                                    </div>
+                                    <input 
+                                        type="url" 
+                                        class="form-control" 
+                                        id="social_<?php echo $key; ?>" 
+                                        name="social[<?php echo $key; ?>]" 
+                                        placeholder="<?php echo ucfirst($key); ?> URL" 
+                                        value="<?php echo htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); ?>" 
+                                        required>
+                                    <div class="invalid-feedback">Please provide a valid <?php echo ucfirst($key); ?> URL.</div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="update_profile" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Jquery  -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Script js to handle adding movies to favorites  -->
-    <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 <?php require VIEWS."layouts/footer.php"; ?>
