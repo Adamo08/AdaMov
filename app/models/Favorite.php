@@ -13,7 +13,7 @@
         public function getFavoritesByUser(int $id): ?array
         {
             // Base Query
-            $sql = "SELECT media_id FROM {$this->table} WHERE user_id = :id";
+            $sql = "SELECT media_id, created_at FROM {$this->table} WHERE user_id = :id ORDER BY created_at DESC";
 
             // Prepare and Execute
             $stmt = $this->db->prepare($sql);
