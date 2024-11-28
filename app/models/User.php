@@ -120,6 +120,100 @@ class User extends Model {
         return $stmt->execute();
     }
 
+
+    /**
+     * Updates the user's profile information.
+     *
+     * @param int $user_id The ID of the user to update.
+     * @param array $data The data to update (keys: fname, lname, email, address).
+     * @return bool True if the update was successful, false otherwise.
+    */
+    public function updateUserProfile($user_id, $data) {
+        try {
+            $sql = "UPDATE {$this->table} 
+                    SET fname = :fname, 
+                        lname = :lname, 
+                        email = :email, 
+                        address = :address 
+                    WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':fname', $data['fname'], PDO::PARAM_STR);
+            $stmt->bindParam(':lname', $data['lname'], PDO::PARAM_STR);
+            $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
+            $stmt->bindParam(':address', $data['address'], PDO::PARAM_STR);
+            $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+            
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log('Update User Profile Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Updates the social links for a user.
+     *
+     * This method updates the user's social media links (facebook, instagram, twitter, github) in the database.
+     * Only the provided links will be updated, and others will remain unchanged.
+     *
+     * @param int $user_id The ID of the user whose social links will be updated.
+     * @param array $socialLinks An associative array of social links, where the key is the 
+     * platform name (e.g., 'facebook', 'github') and the value is the corresponding URL.
+     *  Example: [
+     *            'facebook' => 'https://facebook.com/user', 
+     *            'twitter' => 'https://twitter.com/user'
+     * ].
+     *
+     * @return bool True if the update was successful, false otherwise.
+    */
+    public function updateUserSocialLinks($user_id, $socialLinks) {
+        try {
+            // Prepare the update query
+            $sql = "UPDATE {$this->links_table} 
+                    SET facebook = :facebook, 
+                        instagram = :instagram, 
+                        twitter = :twitter, 
+                        github = :github,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = :user_id";
+            $stmt = $this->db->prepare($sql);
+
+            // Bind parameters
+            $stmt->bindParam(':facebook', $socialLinks['facebook'], PDO::PARAM_STR);
+            $stmt->bindParam(':instagram', $socialLinks['instagram'], PDO::PARAM_STR);
+            $stmt->bindParam(':twitter', $socialLinks['twitter'], PDO::PARAM_STR);
+            $stmt->bindParam(':github', $socialLinks['github'], PDO::PARAM_STR);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+            // Execute the query
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log('Update Social Links Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Updates the user's avatar in the database
+     * @param int $user_id
+     * @param string $avatar_filename
+     * @return bool
+     */
+    public function updateAvatar($user_id, $avatar_filename) {
+        // Update the avatar filename in the database for the given user
+        $query = "UPDATE {$this->table} SET avatar = :avatar WHERE id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':avatar', $avatar_filename);
+        $stmt->bindParam(':user_id', $user_id);
+        return $stmt->execute();
+    }
+
+
+
+
+
     /**
      * Verify user by token.
      * @param string $token
