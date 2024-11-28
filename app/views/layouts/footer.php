@@ -28,15 +28,25 @@
             </div>
         </div>
     </footer>
-    <!-- Footer Section End -->
-
+    <!-- Footer Section End  -->
+    
     <!-- Search model Begin -->
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch"><i class="icon_close"></i></div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
+            <div class="search-content text-white">
+                <form class="search-model-form" id="search-form">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Search here....." 
+                        autocomplete="off" 
+                    >
+                </form>
+                <div id="search-results" class="mt-4">
+                    <!-- Dynamic search results will be loaded here -->
+                </div>
+            </div>
         </div>
     </div>
     <!-- Search model end -->
@@ -50,6 +60,12 @@
     <script src="<?php echo JS;?>jquery.slicknav.js"></script>
     <script src="<?php echo JS;?>owl.carousel.min.js"></script>
     <script src="<?php echo JS;?>main.js"></script>
+
+    <!-- Jquery  -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+    <!-- Script js to handle adding movies to favorites  -->
+    <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 </body>
 
