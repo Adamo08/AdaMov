@@ -93,8 +93,6 @@
                                                     if (!empty($avatar)) {
                                                         echo ASSETS . $avatar; 
                                                     } else {
-                                                        // $initials = strtoupper(substr($full_name, 0, 1)) . strtoupper(substr(strrchr($full_name, ' '), 1, 1));
-                                                        // echo "https://via.placeholder.com/40?text=" . urlencode($initials);
                                                         echo 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&rounded=true&name=' . urlencode($full_name);
                                                     }
                                                 ?>
@@ -109,7 +107,6 @@
                                             <p class="py-2 pl-2">Welcome back <span class="bg-primary px-2 text-white rounded text-nowrap"><?=$full_name?></span></p>
                                             <li><a href="<?=url("user/profile")?>"> Profile</a></li>
                                             <li><a href="<?=url("user/favorites")?>"> Favorites</a></li>
-                                            <li><a href="<?=url("user/settings")?>"> Settings</a></li>
                                             <li><a href="<?=url("auth/logout")?>"> Logout</a></li>
                                         </ul>
                                     </li>
