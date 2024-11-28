@@ -32,6 +32,9 @@
                                 <?php echo $category; ?>
                             </a>
                         </span>
+                        <span>
+                            <?php echo $movie['title']?>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -172,22 +175,12 @@
                                                         
                                                         <!-- Delete Icon -->
                                                         <a 
-                                                            class="review-action-icon mx-1" 
+                                                            class="review-action-icon" 
                                                             title="Delete Review"
                                                             id="delete_review"
                                                             data-review-id = "<?php echo $review['id']?>"
                                                         >
                                                             <i class="fa fa-trash text-danger" style="font-size: 20px; cursor:pointer;"></i>
-                                                        </a>
-
-                                                        <!-- Update Icon -->
-                                                        <a 
-                                                            class="review-action-icon" 
-                                                            id="update-review"
-                                                            title="Update Review"
-                                                            data-review-id = "<?php echo $review['id']?>"
-                                                        >
-                                                            <i class="fa fa-edit text-info" style="font-size: 20px; cursor:pointer;"></i>
                                                         </a>
 
                                                     </div>
@@ -288,10 +281,6 @@
     <!-- Anime Section End -->
 
 
-    <!-- Jquery  -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Script js to handle adding movies to favorites  -->
-    <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 <?php require VIEWS."layouts/footer.php"; ?>
