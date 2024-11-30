@@ -5,7 +5,7 @@
 
         <!-- Page Heading -->
         <div class="mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Genres</h1>
+            <h1 class="h3 mb-0 text-gray-800">Admins</h1>
         </div>
 
         <!-- Content row  -->
