@@ -20,6 +20,21 @@
         }
 
         /**
+         * Counts the total number of records in the genres table.
+         *
+         * @return int The total number of records in the genres table.
+         */
+        public function count(){
+            // Base Query
+            $sql = "SELECT COUNT(*) FROM {$this->table}";
+            // Prepare and Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
+
+        /**
          * Fetches a limited number of genres from the database.
          *
          * @param int $limit The number of genres to retrieve. Default is 5.
