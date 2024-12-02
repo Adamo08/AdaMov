@@ -18,6 +18,23 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+--
+-- Admins table
+--
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fname VARCHAR(50) NOT NULL,
+    lname VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password CHAR(64) NOT NULL, -- SHA256 hash length
+    avatar VARCHAR(255) DEFAULT 'avatars/default.svg',
+    added_by INT DEFAULT NULL, -- References another admin's ID
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (added_by) REFERENCES admins(id) ON DELETE SET NULL
+);
+
 --
 -- Genres table
 --
@@ -106,6 +123,17 @@ VALUES
     ('Jane', 'Smith', 'jane.smith@example.com', SHA2('securepassword', 256)),
     ('Alice', 'Johnson', 'alice.johnson@example.com', SHA2('mysecretpassword', 256)),
     ('Bob', 'Williams', 'bob.williams@example.com', SHA2('password456', 256));
+
+-- Inserting into admins table with hashed passwords
+INSERT INTO admins (fname, lname, email, password, avatar, added_by)
+VALUES
+    ('Root', 'Admin', 'root@admin.com', SHA2('rootpassword123', 256), 'avatar/root.png', NULL),
+    ('John', 'Doe', 'john.doe@admin.com', SHA2('password123', 256), 'avatar/john.png', 1),
+    ('Jane', 'Smith', 'jane.smith@admin.com', SHA2('password123', 256), 'avatar/jane.png', 1),
+    ('Alice', 'Brown', 'alice.brown@admin.com', SHA2('password123', 256), 'avatar/alice.png', 2),
+    ('Bob', 'Johnson', 'bob.johnson@admin.com', SHA2('password123', 256), 'avatar/bob.png', 3);
+
+
 
 -- Inserting into genres table
 INSERT INTO genres (name, description) 
