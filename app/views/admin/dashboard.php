@@ -21,7 +21,9 @@
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Movies
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">120</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <?php echo $statistics['total_movies']?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-film fa-2x text-gray-300"></i>
@@ -42,7 +44,9 @@
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                         Genres
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <?php echo $statistics['total_genres']?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -63,7 +67,9 @@
                                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                         Users
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">300</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <?php echo $statistics['total_users']?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -84,7 +90,9 @@
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                         Admins
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <?php echo $statistics['total_admins']?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-user-shield fa-2x text-gray-300"></i>
