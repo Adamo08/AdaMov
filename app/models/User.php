@@ -211,6 +211,21 @@ class User extends Model {
     }
 
 
+        /**
+         * Counts the total number of records in the users table.
+         *
+         * @return int The total number of records in the users table.
+         */
+        public function count(){
+            // Base Query
+            $sql = "SELECT COUNT(*) FROM {$this->table}";
+            // Prepare and Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
+
 
 
 
