@@ -18,6 +18,22 @@
 
         }
 
+        
+        /**
+         * Counts the total number of records in the media table.
+         *
+         * @return int The total number of records in the media table.
+         */
+        public function count(){
+            // Base Query
+            $sql = "SELECT COUNT(*) FROM {$this->table}";
+            // Prepare and Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
+
         /**
          * Get trending movies based on views, comments, and release date
          * @param int $limit Number of movies to return (default is 10)
