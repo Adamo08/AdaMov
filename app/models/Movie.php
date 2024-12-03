@@ -24,11 +24,19 @@
          *
          * @return int The total number of records in the media table.
          */
-        public function count(){
+        public function count($genre_id=null){
             // Base Query
-            $sql = "SELECT COUNT(*) FROM {$this->table}";
+            $sql = "SELECT COUNT(*) FROM {$this->table} WHERE 1=1";
+            if($genre_id != null && is_int($genre_id)){
+                $sql .= " AND genre_id = :genre_id";
+            }
             // Prepare and Execute
             $stmt = $this->db->prepare($sql);
+
+            if($genre_id != null && is_int($genre_id)){
+                $stmt -> bindParam(":genre_id",$genre_id,PDO::PARAM_INT);
+            }
+
             $stmt->execute();
             return $stmt->fetchColumn();
         }
