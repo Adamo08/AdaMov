@@ -16,6 +16,10 @@
         return date("l j F Y"); 
     }
 
+    function formatDate($date) {
+        return date("D M, Y, g:i a", strtotime($date));
+    }
+
     function sanitizeInput($input) {
         return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
     }
@@ -58,6 +62,23 @@
             return "$months month" . ($months > 1 ? "s" : "") . " ago";
         } else {
             return "$years year" . ($years > 1 ? "s" : "") . " ago";
+        }
+    }
+
+    /**
+     * Render the duration of a movie in hours and minutes.
+     * @param int $duration Total seconds of the movie.
+     * @return string Human-readable duration of the movie (e.g., "2h30min").
+    */
+    function formatMovieDuration($totalSeconds){
+        $minutes = floor($totalSeconds / 60);
+        $hours = floor($minutes / 60);
+        $remainingMinutes = $minutes % 60;
+
+        if ($hours > 0) {
+            return "{$hours}h{$remainingMinutes}min";
+        } else {
+            return "{$minutes} min";
         }
     }
 
