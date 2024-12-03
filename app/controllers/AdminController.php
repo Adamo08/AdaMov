@@ -142,7 +142,12 @@ class AdminController extends Controller {
         $this->authenticate();
 
         $movieModel = new Movie();
+        $genreModel = new Genre();
         $movies = $movieModel->all();
+        foreach ($movies as &$movie) {
+            $movie['genre'] = $genreModel->getName($movie['genre_id']);
+        }
+        unset($movie);
         $this->view("admin/movies", ['movies' => $movies]);
     }
 
@@ -152,7 +157,11 @@ class AdminController extends Controller {
     public function genres(){
         $this->authenticate();
         $genreModel = new Genre();
+        $movieModel = new Movie();
         $genres = $genreModel->all();
+        foreach($genres as &$genre){
+            $genre['total_movies'] = $movieModel->count($genre['id']);
+        }
         $this->view("admin/genres", ['genres' => $genres]);
     }
 
