@@ -72,7 +72,7 @@
     <!-- Jquery  -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
-    <!-- Script js to handle adding movies to favorites  -->
+    <!-- Script js to handle ajax request  -->
     <script src="<?php echo JS;?>ajax_requests.js"></script>
 
 </body>
