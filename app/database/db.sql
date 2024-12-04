@@ -117,12 +117,12 @@ CREATE TABLE IF NOT EXISTS favorites (
 -- Inserting sample data for the movies_db database with SHA-256 hashed passwords
 
 -- Inserting into users table with hashed passwords
-INSERT INTO users (fname, lname, email, password) 
+INSERT INTO users (fname, lname, avatar, address, email, password) 
 VALUES
-    ('John', 'Doe', 'john.doe@example.com', SHA2('password123', 256)),
-    ('Jane', 'Smith', 'jane.smith@example.com', SHA2('securepassword', 256)),
-    ('Alice', 'Johnson', 'alice.johnson@example.com', SHA2('mysecretpassword', 256)),
-    ('Bob', 'Williams', 'bob.williams@example.com', SHA2('password456', 256));
+    ('John', 'Doe', 'avatars/john_doe.png', 'ABD 123 CA', 'john.doe@example.com', SHA2('password123', 256)),
+    ('Jane', 'Smith', 'avatars/jane_smith.png', 'DEF 456 LA', 'jane.smith@example.com', SHA2('securepassword', 256)),
+    ('Alice', 'Johnson', 'avatars/alice_johnson.png', 'GHI 789 NY', 'alice.johnson@example.com', SHA2('mysecretpassword', 256)),
+    ('Bob', 'Williams', 'avatars/bob_williams.png', 'JKL 599 SM', 'bob.williams@example.com', SHA2('password456', 256));
 
 -- Inserting into admins table with hashed passwords
 INSERT INTO admins (fname, lname, email, password, avatar, added_by)
