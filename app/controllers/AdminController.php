@@ -163,8 +163,18 @@ class AdminController extends Controller {
 
             if ($userId) {
                 $userModel = new User();
-                // Attempt to delete the user
+                
+                // Fetch the avatar path
+                $avatarPath = $userModel->getAvatar($userId);
+
+                // Attempt to delete the user from the database
                 if ($userModel->deleteUser($userId)) {
+                    // Check if avatar exists and delete it
+                    if ($avatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/' . $avatarPath)) {
+                        unlink($_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/' . $avatarPath);
+                    }
+
+                    // Respond with success
                     echo json_encode([
                         'success' => true,
                         'message' => 'User has been successfully removed.'
@@ -191,6 +201,72 @@ class AdminController extends Controller {
             ]);
         }
     }
+
+    /**
+     * Updating users action
+    */
+    public function update_user() {
+
+        // Ensure the request is an AJAX POST request
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method or empty data.'
+            ]);
+            return;
+        }
+
+        // Check if the user is logged in
+        if (!isset($_SESSION['admin_id'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'You must be logged in process this action.'
+            ]);
+            return;
+        }
+
+        $user_id = $_POST['user_id'];
+
+        // Get input data
+        $firstName = sanitizeInput($_POST['fname']) ?? '';
+        $lastName = sanitizeInput($_POST['lname']) ?? '';
+        $email = sanitizeInput($_POST['email']) ?? '';
+        $address = sanitizeInput($_POST['address']) ?? '';
+
+        // Validate basic fields (only check required fields)
+        if (empty($firstName) || empty($lastName) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($address)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Please fill out all fields with valid information.'
+            ]);
+            return;
+        }
+
+        // Initialize the User model
+        $userModel = new User();
+
+        // Update user profile
+        $updateSuccess = $userModel->updateUserProfile($user_id, [
+            'fname' => $firstName,
+            'lname' => $lastName,
+            'email' => $email,
+            'address' => $address
+        ]);
+
+
+        if ($updateSuccess) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'User updated successfully.'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to update user. Please try again later.'
+            ]);
+        }
+    }
+
 
 
     /**
