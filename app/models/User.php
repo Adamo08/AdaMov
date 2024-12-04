@@ -120,6 +120,21 @@ class User extends Model {
         return $stmt->execute();
     }
 
+    /**
+     * Removes a user from the db (admin-only)
+     * @param int $user_id
+     * @return bool
+    */
+    public function deleteUser($user_id) {
+        // Base Query
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        // Prepare, Bind AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    }
+
 
     /**
      * Updates the user's profile information.
