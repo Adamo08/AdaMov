@@ -66,32 +66,32 @@ $(document).ready(function () {
     });
     
     // Save changes button click handler
-    $('#saveChangesBtn').on('click', function () {
+    $('#saveChangesBtn').on('click', function (e) {
 
-        const formData = new FormData($('#editUserForm')[0]);
+        e.preventDefault();
+
+        const formData = $('#editUserForm').serialize();
     
-        // $.ajax({
-        //     type: 'POST',
-        //     url: '/AdaMov/public/admin/update_user',
-        //     data: formData,
-        //     contentType: false,
-        //     processData: false,
-        //     success: function (response) {
-        //         const data = JSON.parse(response);
-        //         if (data.success) {
-        //             alert('User updated successfully!');
-        //             location.reload();
-        //         } else {
-        //             alert('Failed to update user: ' + data.message);
-        //         }
-        //     },
-        //     error: function (xhr, status, error) {
-        //         console.error("XHR:", xhr);
-        //         console.error("Status:", status);
-        //         console.error("Error:", error);
-        //         alert('An error occurred. Please try again.');
-        //     }
-        // });
+        $.ajax({
+            type: 'POST',
+            url: '/AdaMov/public/admin/update_user',
+            data: formData,
+            success: function (response) {
+                const data = JSON.parse(response);
+                if (data.success) {
+                    alert('User updated successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to update user: ' + data.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("XHR:", xhr);
+                console.error("Status:", status);
+                console.error("Error:", error);
+                alert('An error occurred. Please try again.');
+            }
+        });
     });
         
 
