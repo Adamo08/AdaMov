@@ -152,6 +152,48 @@ class AdminController extends Controller {
     }
 
     /**
+     * Removing Users Action
+    */
+    public function remove_user()
+    {
+        // Check if the request is a POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate user ID
+            $userId = isset($_POST['user_id']) ? intval($_POST['user_id']) : null;
+
+            if ($userId) {
+                $userModel = new User();
+                // Attempt to delete the user
+                if ($userModel->deleteUser($userId)) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'User has been successfully removed.'
+                    ]);
+                } else {
+                    // Deletion failed
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to remove user. Please try again later.'
+                    ]);
+                }
+            } else {
+                // Invalid or missing user ID
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid user ID provided.'
+                ]);
+            }
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
+
+    /**
      * Renders the genres view.
      */
     public function genres(){
