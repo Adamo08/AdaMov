@@ -66,6 +66,13 @@
     <!-- Page level custom scripts -->
     <script src="<?php echo ADMINASSETS?>js/demo/datatables-demo.js"></script>
 
+    <!-- Script js to handle ajax request  -->
+    <script src="<?php echo ADMINASSETS;?>js/admin_ajax_requests.js"></script>
+
+    <!-- Sweet Alerts CDN js link  -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
 </body>
 
 </html>
