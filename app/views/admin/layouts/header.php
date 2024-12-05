@@ -10,7 +10,10 @@
     <meta name="author" content="">
 
     <title>
-        <?php echo $title ?? "AdaMov | Admin"?>
+        <?php 
+            $title = $title ?? "Admin";
+            echo "AdaMov | ".$title;
+        ?>
     </title>
 
     <!-- Custom fonts for this template-->
