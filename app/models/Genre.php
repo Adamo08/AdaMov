@@ -67,17 +67,27 @@
         
 
         /**
-         * Returns the genre name associated with the specified id
-         * @param int $id
-         * @return string
+         * Returns the genre name(s) associated with the specified id or all genres if no id is provided
+         * @param int|null $id
+         * @return string|array
         */
-        public function getName($id) {
-            $sql = "SELECT name FROM {$this->table} WHERE id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetchColumn();
+        public function getName($id = null) {
+            if ($id === null) {
+                // Fetch all genre names
+                $sql = "SELECT id, name FROM {$this->table}";
+                $stmt = $this->db->prepare($sql);
+                $stmt->execute();
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                // Fetch a single genre name by ID
+                $sql = "SELECT name FROM {$this->table} WHERE id = :id";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+                return $stmt->fetchColumn();
+            }
         }
+
 
         /**
          * Fetches a row from the database using the specified genre
