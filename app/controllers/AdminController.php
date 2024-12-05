@@ -135,9 +135,16 @@ class AdminController extends Controller {
         $this->view('admin/auth/forgot_password');
     }
 
+
+
+    /***************************
+     * Movies Related Actions
+     ***************************/
+
+
     /**
-     * Renders the movies view.
-     */
+    * ==> Renders the movies view.
+    */
     public function movies(){
         $this->authenticate();
 
@@ -148,11 +155,105 @@ class AdminController extends Controller {
             $movie['genre'] = $genreModel->getName($movie['genre_id']);
         }
         unset($movie);
-        $this->view("admin/movies", ['movies' => $movies]);
+        $this->view(
+            "admin/movies/movies", 
+            [
+                'title' => 'Movies',
+                'movies' => $movies
+            ]
+        );
     }
 
     /**
-     * Removing Users Action
+     * ==> Renders the view for adding new movies
+    */
+    public function add_movie(){
+        $this->authenticate();
+        $genreModel = new Genre();
+        $genres = $genreModel->getName();
+        $this->view(
+            "admin/movies/add_movie", 
+            [
+                'title' => 'Add Movie',
+                'genres' => $genres
+            ]
+        );
+
+    }
+
+
+    /**************************
+     * Genres Related Actions
+     **************************/
+
+
+    /**
+     * ==> Renders the genres view.
+     */
+    public function genres(){
+        $this->authenticate();
+        $genreModel = new Genre();
+        $movieModel = new Movie();
+        $genres = $genreModel->all();
+        foreach($genres as &$genre){
+            $genre['total_movies'] = $movieModel->count($genre['id']);
+        }
+        $this->view(
+            "admin/genres/genres", 
+            [
+                'title' => 'Genres',
+                'genres' => $genres
+            ]
+        );
+    }
+
+    /**
+     * ==> Renderes the view for adding new genres
+    */
+    public function add_genre(){
+        $this->authenticate();
+        $this->view(
+            "admin/genres/add_genre", 
+            ['title' => 'Add Genre']
+        );
+    }
+
+
+
+    /************************
+     * Users Related Actions
+     ************************/
+
+
+    /**
+     * ==> Renders the users view.
+     */
+    public function users(){
+        $this->authenticate();
+        $userModel = new User();
+        $users = $userModel->getAllUsers();
+        $this->view(
+            "admin/users/users", 
+            [
+                'title' => 'Users',
+                'users' => $users
+            ]
+        );
+    }
+
+    /**
+     * ==> Renders the view for adding new users
+    */
+    public function add_user(){
+        $this->authenticate();
+        $this->view(
+            "admin/users/add_user", 
+            ['title' => 'Add User']
+        );
+    }
+
+    /**
+     * ==> Removing Users Action
     */
     public function remove_user()
     {
@@ -203,7 +304,7 @@ class AdminController extends Controller {
     }
 
     /**
-     * Updating users action
+     * ==> Updating users action
     */
     public function update_user() {
 
@@ -269,38 +370,48 @@ class AdminController extends Controller {
 
 
 
-    /**
-     * Renders the genres view.
-     */
-    public function genres(){
-        $this->authenticate();
-        $genreModel = new Genre();
-        $movieModel = new Movie();
-        $genres = $genreModel->all();
-        foreach($genres as &$genre){
-            $genre['total_movies'] = $movieModel->count($genre['id']);
-        }
-        $this->view("admin/genres", ['genres' => $genres]);
-    }
+
+    /***************************
+     * Admins Related Actions
+     ***************************/
 
     /**
-     * Renders the users view.
-     */
-    public function users(){
-        $this->authenticate();
-        $userModel = new User();
-        $users = $userModel->getAllUsers();
-        $this->view("admin/users", ['users' => $users]);
-    }
-
-    /**
-     * Renders the admins view.
+     * ==> Renders the admins view.
      */
     public function admins(){
         $this->authenticate();
         $adminModel = new Admin();
         $admins = $adminModel->all();
-        $this->view("admin/admins", ['admins' => $admins]);
+        $this->view(
+            "admin/admins/admins", 
+            [
+                "title" => 'Admins',
+                'admins' => $admins
+            ]
+        );
+    }
+
+    /**
+     * ==> Renders the view for adding new admins
+    */
+    public function add_admin(){
+        $this->authenticate();
+        $this->view(
+            "admin/admins/add_admin",
+            ['title' => 'Add Admin']
+        );
+    }
+
+    /**
+     * ==> Renders the contact view for admins
+    */
+    public function contact_admin(){
+        $this->authenticate();
+        $this->view(
+            "admin/admins/contact_admin",
+            ['title' => 'Add Admin']
+        );
+
     }
 
     /**
