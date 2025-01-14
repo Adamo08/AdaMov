@@ -319,4 +319,34 @@
         }
 
 
+    /**
+     * Returns the thumbnail for the specified movie
+     * @param int $id movie's ID
+     * @return string 
+    */
+    public function getThumbnail($id){
+        // Base Query
+        $sql = "SELECT thumbnail FROM {$this->table} WHERE id = :id";
+        // Prepare AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
     }
+
+    /**
+     * Returns the mp4 media file name for the specified movie
+     * @param int $id movie's ID
+     * @return string 
+    */
+    public function getMediaMP4($id){
+        // Base Query
+        $sql = "SELECT file_name FROM {$this->table} WHERE id = :id";
+        // Prepare AND Execute
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+}
