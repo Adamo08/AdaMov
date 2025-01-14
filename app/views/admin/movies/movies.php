@@ -62,11 +62,12 @@
                                 <th>Actions</th>
                             </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody id="movie-table-body">
                             <?php $i=0?>
                             <?php foreach($movies as $movie):?>
-                                <tr>
-                                    <td><?php echo ++$i;?></td>
+                                <tr id="row_<?= htmlspecialchars($movie['id']) ?>">
+                                    <!-- Row Number -->
+                                    <td class="row-number"><?= ++$i ?></td>
                                     <td>
                                         <img 
                                             src="<?php echo ASSETS.$movie['thumbnail']?>"
@@ -83,10 +84,18 @@
                                     <td><?= formatDate($movie['release_date'])?></td>
                                     <td><?= formatDate($movie['created_at'])?></td>
                                     <td>
-                                        <a href="" class="btn btn-danger btn-circle btn-sm">
+                                        <a
+                                            href="javascript:void(0);"
+                                            class="btn btn-danger btn-circle btn-sm remove_movie_btn"
+                                            data-movie-id="<?= htmlspecialchars($movie['id']) ?>"
+                                            title="Delete Movie"
+                                        >
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                        <a href="" class="btn btn-primary btn-circle btn-sm">
+                                        <a 
+                                            href="javascript:void(0);"
+                                            class="btn btn-primary btn-circle btn-sm"
+                                        >
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </td>
