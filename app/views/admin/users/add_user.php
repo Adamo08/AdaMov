@@ -15,42 +15,42 @@
                     <h6 class="m-0 font-weight-bold text-primary">User Details</h6>
                 </div>
                 <div class="card-body">
-                    <form id="addUserForm" action="/admin/add_user" method="POST" enctype="multipart/form-data">
+                    <form id="addUserForm" action="" method="POST" enctype="multipart/form-data">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="firstName">First Name</label>
-                                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter first name" required>
+                                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter first name">
                                 <div class="invalid-feedback">Please enter a valid first name.</div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter last name" required>
+                                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter last name">
                                 <div class="invalid-feedback">Please enter a valid last name.</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="2" placeholder="Enter address" required></textarea>
+                            <textarea class="form-control" id="address" name="address" rows="2" placeholder="Enter address"></textarea>
                             <div class="invalid-feedback">Please enter a valid Address.</div>
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
                             <div class="invalid-feedback">Please enter a valid email address.</div>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
                         </div>
                         <div class="form-group">
                             <label for="avatar">Avatar</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="avatar" name="avatar" accept="image/*" required>
+                                <input type="file" class="custom-file-input" id="avatar" name="avatar" accept="image/*">
                                 <label class="custom-file-label" for="avatar">Choose file</label>
                             </div>
                         </div>
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary btn-block">Add User</button>
+                            <button type="submit" id="addUserBtn" class="btn btn-primary btn-block">Add User</button>
                         </div>
                     </form>
                 </div>
@@ -68,5 +68,6 @@
     });
 
 </script>
+
 
 <?php require ADMINVIEWS."layouts/footer.php"; ?>
