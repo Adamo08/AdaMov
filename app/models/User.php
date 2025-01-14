@@ -92,33 +92,54 @@ class User extends Model {
 
     /**
      * Function to insert a new user.
-     * @param string $fname
-     * @param string $lname
-     * @param string $email
-     * @param string $password
-     * @param string $token
-     * @return bool
-    */
-    public function createUser($fname, $lname, $email, $password, $token) {
+     *
+     * @param string $fname User's first name
+     * @param string $lname User's last name
+     * @param string $email User's email
+     * @param string $password User's password
+     * @param string|null $token Verification token (nullable)
+     * @param string|null $avatar User's avatar path (nullable)
+     * @param string|null $address User's address (nullable)
+     * @param bool $status User's verification status (default: false)
+     * @return bool True on success, false on failure
+     */
+    public function createUser(
+        string $fname,
+        string $lname,
+        string $email,
+        string $password,
+        ?string $token = null,
+        ?string $avatar = null,
+        ?string $address = null,
+        bool $status = false
+    ): bool {
         // Check if email already exists
         if ($this->getUserByEmail($email)) {
             return false;
         }
 
+        // Hash the password
         $passwordHash = hash('sha256', $password);
 
-        // Insert a new user
-        $query = 'INSERT INTO ' . $this->table . ' (fname, lname, email, password, verification_token) VALUES (:fname, :lname, :email, :password, :token)';
+        // Build the query with optional fields
+        $query = 'INSERT INTO ' . $this->table . ' (fname, lname, email, password, verification_token, avatar, address, status) 
+                VALUES (:fname, :lname, :email, :password, :token, :avatar, :address, :status)';
         $stmt = $this->db->prepare($query);
 
+        // Bind parameters
         $stmt->bindParam(':fname', $fname);
         $stmt->bindParam(':lname', $lname);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $passwordHash);
         $stmt->bindParam(':token', $token);
+        $stmt->bindParam(':avatar', $avatar);
+        $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':status', $status, PDO::PARAM_BOOL);
 
+        // Execute the query and return the result
         return $stmt->execute();
     }
+
 
     /**
      * Removes a user from the db (admin-only)
