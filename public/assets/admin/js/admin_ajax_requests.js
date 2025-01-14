@@ -1,5 +1,14 @@
 $(document).ready(function () {
     
+
+
+    /**************************************************
+     *                                                *
+     *      Users related actions                     *
+     *                                                *
+     **************************************************/
+
+    
     /***********************
         Removing users
     ************************/
@@ -43,9 +52,9 @@ $(document).ready(function () {
     });
 
 
-    /*****************
+    /******************
         Updating users
-    ******************/
+    *******************/
 
     $(document).on('click', '.edit_user_btn', function () {
         // Get user data from the button attributes
@@ -93,6 +102,163 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    /*****************
+        Adding users
+    ******************/
+
+    $('#addUserForm').on('submit', function (e) {
+        e.preventDefault();
+
+        // Perform client-side validation
+        let isValid = true;
+
+        // Validate First Name
+        const firstName = $('#firstName').val().trim();
+        if (!firstName) {
+            $('#firstName').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#firstName').removeClass('is-invalid');
+        }
+
+        // Validate Last Name
+        const lastName = $('#lastName').val().trim();
+        if (!lastName) {
+            $('#lastName').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#lastName').removeClass('is-invalid');
+        }
+
+        // Validate Address
+        const address = $('#address').val().trim();
+        if (!address) {
+            $('#address').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#address').removeClass('is-invalid');
+        }
+
+        // Validate Email
+        const email = $('#email').val().trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            $('#email').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#email').removeClass('is-invalid');
+        }
+
+        // Validate Password
+        const password = $('#password').val().trim();
+        if (!password || password.length < 6) {
+            $('#password').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#password').removeClass('is-invalid');
+        }
+
+        // Stop if validation fails
+        if (!isValid) {
+            return;
+        }
+
+        // Collect form data, including files
+        const formData = new FormData(this);
+
+        // Send AJAX request to add the user
+        $.ajax({
+            url: '/AdaMov/public/admin/addUser',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                console.log('AJAX request successful:', response);
+                if (response.success) {
+                    alert('User added successfully!');
+                    $('#addUserForm')[0].reset();
+                    $('.custom-file-label').text('Choose file');
+                    $('.form-control').removeClass('is-invalid');
+                } else {
+                    alert(response.message || 'Failed to add user. Please try again.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    });
+
+
+    // Remove invalid class on input change
+    $('.form-control').on('input change', function () {
+        $(this).removeClass('is-invalid');
+    });
+
+
+
+
+    /**************************************************
+     *                                                *
+     *      Movies related actions                    * 
+     *                                                *
+     **************************************************/
+
+    /********************
+        Removing movies *
+    *********************/
+    
+    $("#movie-table-body").on('click', '.remove_movie_btn', function (e) {
+
+        e.preventDefault();
+
+        let movieId = $(this).data('movie-id');
+        let userRow = $(this).closest('tr');
+
+        if (movieId && confirm("Are you sure you want to delete this Movie?")) {
+            $.ajax({
+                url: "/AdaMov/public/admin/remove_movie",
+                type: "POST",
+                data: { movie_id: movieId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Remove the row
+                        userRow.remove();
+
+                        // Update row numbers
+                        $("#movie-table-body .row-number").each(function (index) {
+                            $(this).text(index + 1);
+                        });
+
+                        alert(response.message);
+                    } else {
+                        alert(response.message || "Error deleting user.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                },
+            });
+        }
         
+        
+    });
+
 
 });
