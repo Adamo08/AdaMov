@@ -260,5 +260,39 @@ $(document).ready(function () {
         
     });
 
+    /********************
+        Editing movies *
+    *********************/
+
+    $(document).on('click', '.edit_movie_btn', function() {
+        const movieId = $(this).data('movie-id');
+        const title = $(this).data('title');
+        const genreId = $(this).data('genre-id');
+        const duration = $(this).data('duration');
+        const status = $(this).data('status');
+        const releaseDate = $(this).data('release-date');
+        const thumbnail = $(this).data('thumbnail');
+        const fileName = $(this).data('file-name');
+        const description = $(this).data('description');
+        const quality = $(this).data('quality');
+
+        console.log({
+            movieId, title, genreId, duration, status, releaseDate, thumbnail, fileName, description, quality
+        });
+        
+    
+        // $('#edit_movie_id').val(movieId);
+        // $('#edit_movie_title').val(title);
+        // $('#edit_movie_genre').val(genreId);
+        // $('#edit_movie_duration').val(duration);
+        // $('#edit_movie_status').val(status);
+        // $('#edit_movie_release_date').val(releaseDate);
+        // $('#edit_movie_thumbnail').attr('src', thumbnail);
+        // $('#edit_movie_file_name').val(fileName);
+        // $('#edit_movie_description').val(description);
+        // $('#edit_movie_quality').val(quality);
+    });
+        
+
 
 });
