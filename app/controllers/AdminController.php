@@ -151,6 +151,7 @@ class AdminController extends Controller {
         $movieModel = new Movie();
         $genreModel = new Genre();
         $movies = $movieModel->all();
+        $genres = $genreModel->all();
         foreach ($movies as &$movie) {
             $movie['genre'] = $genreModel->getName($movie['genre_id']);
         }
@@ -159,7 +160,8 @@ class AdminController extends Controller {
             "admin/movies/movies", 
             [
                 'title' => 'Movies',
-                'movies' => $movies
+                'movies' => $movies,
+                'genres' => $genres
             ]
         );
     }
@@ -183,7 +185,7 @@ class AdminController extends Controller {
 
 
     /**
-     * ==> Removing Users Action
+     * ==> Removing Movie Action
     */
     public function remove_movie()
     {
@@ -234,6 +236,43 @@ class AdminController extends Controller {
             ]);
         }
     }
+
+    /**
+     * ==> Updating movies action
+     */
+    public function update_movie()
+    {
+        // Check if the request method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Sanitize input data
+            $id = isset($_POST['movie_id']) ? intval($_POST['movie_id']) : null;
+            $data = $_POST;
+            unset($data['movie_id']);
+
+            // Ensure the movie ID is provided
+            if (!$id) {
+                echo json_encode(['status' => 'error', 'message' => 'Movie ID is required.']);
+                return;
+            }
+
+            // Instantiate the Movie model
+            $movie = new Movie();
+
+            // Call the updateMovie method
+            $result = $movie->updateMovie($id, $data);
+
+            if ($result) {
+                echo json_encode(['status' => 'success', 'message' => 'Movie updated successfully.']);
+            } else {
+                error_log("Failed to update movie with ID: $id. Data provided: " . json_encode($data));
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update movie. Please try again.']);
+            }
+        } else {
+            // Handle invalid request methods
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
+        }
+    }
+
 
 
     /**************************
