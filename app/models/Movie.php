@@ -290,33 +290,56 @@
          * Updates movie details (admin-only).
          * 
          * @param int $id - The ID of the movie to update.
-         * @param array $data - An associative array containing the fields to update
+         * @param array $data - An associative array containing the fields to update.
          * @return bool - Returns true on success, false on failure.
          */
-        public function updateMovie($id, $data) {
-            $fields = [];
-            $params = [];
+        public function updateMovie($id, $data)
+        {
+            // Validate that the movie ID is provided
+            if (empty($id) || !is_array($data)) {
+                return false;
+            }
+
+            // Fetch current movie data
+            $currentData = $this->getMovieById($id);
+            if (!$currentData) {
+                return false;
+            }
+
+            // Identify changed fields
+            $changes = [];
             foreach ($data as $key => $value) {
-                // Only add fields that are valid column names
-                if (in_array($key, ['title', 'description', 'release_date', 'genre_id', 'thumbnail', 'file_name'])) {
-                    $fields[] = "$key = :$key";
-                    $params[":$key"] = $value;
+                if (array_key_exists($key, $currentData) && $currentData[$key] !== $value) {
+                    $changes[$key] = $value;
                 }
             }
 
-            // Add the movie ID to parameters
-            $params[':id'] = $id;
+            // If no changes, return early
+            if (empty($changes)) {
+                return true;
+            }
 
-            // Join fields to create the SQL query
-            $sql = "UPDATE {$this->table} SET " . implode(", ", $fields) . ", updated_at = CURRENT_TIMESTAMP WHERE id = :id";
-            
+            // Build the SQL query dynamically
+            $fields = [];
+            $values = [];
+            foreach ($changes as $key => $value) {
+                $fields[] = "$key = :$key";
+                $values[":$key"] = $value;
+            }
+
+            $values[':id'] = $id;
+            $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE id = :id";
+
             try {
+                // Execute the query
                 $stmt = $this->db->prepare($sql);
-                return $stmt->execute($params);
+                return $stmt->execute($values);
             } catch (PDOException $e) {
+                error_log('Failed to update movie: ' . $e->getMessage());
                 return false;
             }
         }
+
 
 
     /**
