@@ -182,9 +182,14 @@
                                             required
                                         >
                                             <option value="">Select Genre</option>
-                                            <!-- Dynamically populate genres here -->
+                                            <?php foreach ($genres as $genre): ?>
+                                                <option value="<?= htmlspecialchars($genre['id']) ?>">
+                                                    <?= htmlspecialchars($genre['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
+
 
                                     <!-- Duration -->
                                     <div class="form-group">
@@ -281,7 +286,6 @@
             </div>
         </div>
     </div>
-
 
 
 <?php require ADMINVIEWS."layouts/footer.php"; ?>
