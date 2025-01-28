@@ -274,6 +274,136 @@ class AdminController extends Controller {
     }
 
 
+    /**
+     * ==> Adding movies action 
+     */
+    public function addMovie()
+    {
+        // Check if the request is a POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            // Validate required fields
+            $title = isset($_POST['title']) ? trim($_POST['title']) : null;
+            $description = isset($_POST['description']) ? trim($_POST['description']) : null;
+            $releaseDate = isset($_POST['releaseDate']) ? trim($_POST['releaseDate']) : null;
+            $genre = isset($_POST['genre']) ? trim($_POST['genre']) : null;
+            $duration = isset($_POST['duration']) ? trim($_POST['duration']) : null;
+            $quality = isset($_POST['quality']) ? trim($_POST['quality']) : null;
+
+            // Validate file inputs
+            $thumbnail = isset($_FILES['thumbnail']) ? $_FILES['thumbnail'] : null;
+            $mediaFile = isset($_FILES['fileName']) ? $_FILES['fileName'] : null;
+
+            // Check if all required fields are provided
+            if (!$title || !$description || !$releaseDate || !$genre || !$duration || !$quality || !$thumbnail || !$mediaFile) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Please fill in all the fields and upload necessary files.'
+                ]);
+                return;
+            }
+
+            // Validate duration
+            if (!is_numeric($duration) || $duration <= 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid movie duration provided.'
+                ]);
+                return;
+            }
+
+            // Handle file uploads (Thumbnail and Movie File)
+            $thumbnailPath = null;
+            $mediaPath = null;
+            
+            // Upload Thumbnail
+            $thumbnailDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/thumbnails/';
+            if ($thumbnail && $thumbnail['error'] === UPLOAD_ERR_OK) {
+                $thumbnailExt = pathinfo($thumbnail['name'], PATHINFO_EXTENSION);
+                $thumbnailPath = 'thumbnails/'.uniqid('thumb_') . '.' . $thumbnailExt;
+                $thumbnailTargetPath = $thumbnailDir . $thumbnailPath;
+
+                if (!move_uploaded_file($thumbnail['tmp_name'], $thumbnailTargetPath)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to upload thumbnail. Please try again.'
+                    ]);
+                    return;
+                }
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error uploading thumbnail.'
+                ]);
+                return;
+            }
+
+            // Upload Movie File (MP4 or any media type)
+            $mediaDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/videos/';
+            if ($mediaFile && $mediaFile['error'] === UPLOAD_ERR_OK) {
+                $mediaExt = pathinfo($mediaFile['name'], PATHINFO_EXTENSION);
+                $mediaPath = 'videos/'.uniqid('movie_') . '.' . $mediaExt;
+                $mediaTargetPath = $mediaDir . $mediaPath;
+
+                if (!move_uploaded_file($mediaFile['tmp_name'], $mediaTargetPath)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to upload movie file. Please try again.'
+                    ]);
+                    return;
+                }
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error uploading movie file.'
+                ]);
+                return;
+            }
+
+            // Prepare the movie data for database insertion
+            $movieData = [
+                'title' => $title,
+                'description' => $description,
+                'release_date' => $releaseDate,
+                'genre' => $genre,
+                'duration' => $duration,
+                'quality' => $quality,
+                'thumbnail' => $thumbnailPath,
+                'media_file' => $mediaPath,
+            ];
+
+            // Insert movie into the database
+            $movieModel = new Movie();
+            $inserted = $movieModel->addMovie($movieData);
+
+            if ($inserted) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Movie added successfully!'
+                ]);
+            } else {
+                // In case insertion fails
+                // Delete uploaded files if insertion failed
+                unlink($thumbnailTargetPath);
+                unlink($mediaTargetPath);
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to add movie. Please try again later.'
+                ]);
+            }
+
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
+
+
 
     /**************************
      * Genres Related Actions
