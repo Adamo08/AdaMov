@@ -232,45 +232,46 @@
 
 
 
-        /**
-         * 
-         * A function that adds a new movie (admin-only).
-         * @param string $title Title of the movie
-         * @param string $description Description of the movie
-         * @param datetime $release_date Release date of the movie
-         * @param string $genre Genres of the movie
-         * 
-         * @return boolean
-        */
-        public function addMovie($title, $description, $release_date, $genre){
-            $genre_obj = new Genre();
-            $genre_id = $genre_obj->getId($genre);
-            $sql = "INSERT INTO 
-                    {$this->table} 
-                    (
-                        title, 
-                        description, 
-                        release_date, 
-                        genre_id
-                    ) 
-                    VALUES 
-                    (
-                        :title, 
-                        :description, 
-                        :release_date, 
-                        :genre_id
-                    )
-                ";
+    /**
+     * A function that adds a new movie (admin-only).
+     * @param array $movieData Associative array containing movie details (title, description, release_date, genre, duration, quality, thumbnail, media_file)
+     * @return boolean
+     */
+    public function addMovie($movieData) {
+        // Extract data from the movieData array
+        $title = $movieData['title'];
+        $description = $movieData['description'];
+        $release_date = $movieData['release_date'];
+        $genre = $movieData['genre'];
+        $duration = $movieData['duration'];
+        $quality = $movieData['quality'];
+        $thumbnail = $movieData['thumbnail'];
+        $media_file = $movieData['media_file'];
 
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':description', $description);
-            $stmt->bindParam(':release_date', $release_date);
-            $stmt->bindParam(':genre_id', $genre_id);
+        // Get genre ID using the Genre model
+        $genre_obj = new Genre();
+        $genre_id = $genre_obj->getId($genre);
 
-            return $stmt->execute();
+        // Prepare SQL query to insert the movie data
+        $sql = "INSERT INTO {$this->table} 
+                (title, description, release_date, genre_id, duration, quality, thumbnail, media_file)
+                VALUES
+                (:title, :description, :release_date, :genre_id, :duration, :quality, :thumbnail, :media_file)";
 
-        }
+        // Prepare and execute the statement
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':release_date', $release_date);
+        $stmt->bindParam(':genre_id', $genre_id);
+        $stmt->bindParam(':duration', $duration);
+        $stmt->bindParam(':quality', $quality);
+        $stmt->bindParam(':thumbnail', $thumbnail);
+        $stmt->bindParam(':media_file', $media_file);
+
+        // Execute the statement and return the result
+        return $stmt->execute();
+    }
 
 
         /**
