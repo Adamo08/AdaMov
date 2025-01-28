@@ -312,7 +312,7 @@ $(document).ready(function () {
             type: 'POST',
             data: formData,
             success: function (response) {
-                
+
                 const jsonResponse = JSON.parse(response);
     
                 if (jsonResponse.status === 'success') {
@@ -328,8 +328,140 @@ $(document).ready(function () {
             },
         });
     });
-    
-        
 
+
+
+    /******************
+        Adding Movies *
+    ******************/
+
+    $('#addMovieButton').click(function(e) {
+        e.preventDefault();
+        
+        // Perform client-side validation
+        let isValid = true;
+    
+        // Validate Movie Title
+        const title = $('#title').val().trim();
+        if (!title) {
+            $('#title').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#title').removeClass('is-invalid');
+        }
+    
+        // Validate Description
+        const description = $('#description').val().trim();
+        if (!description) {
+            $('#description').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#description').removeClass('is-invalid');
+        }
+    
+        // Validate Release Date
+        const releaseDate = $('#releaseDate').val().trim();
+        if (!releaseDate) {
+            $('#releaseDate').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#releaseDate').removeClass('is-invalid');
+        }
+    
+        // Validate Genre
+        const genre = $('#genre').val();
+        if (!genre) {
+            $('#genre').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#genre').removeClass('is-invalid');
+        }
+    
+        // Validate Thumbnail
+        const thumbnail = $('#thumbnail').get(0).files.length;
+        if (thumbnail === 0) {
+            $('#thumbnail').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#thumbnail').removeClass('is-invalid');
+        }
+    
+        // Validate Movie File
+        const fileName = $('#fileName').get(0).files.length;
+        if (fileName === 0) {
+            $('#fileName').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#fileName').removeClass('is-invalid');
+        }
+    
+        // Validate Duration
+        const duration = $('#duration').val().trim();
+        if (!duration || isNaN(duration) || duration <= 0) {
+            $('#duration').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#duration').removeClass('is-invalid');
+        }
+    
+        // Validate Quality
+        const quality = $('#quality').val();
+        if (!quality) {
+            $('#quality').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#quality').removeClass('is-invalid');
+        }
+    
+        // Stop if validation fails
+        if (!isValid) {
+            return;
+        }
+    
+        // Collect form data, including files
+        const formData = new FormData($('#addMovieForm')[0]);
+    
+        // Send AJAX request to add the movie
+        $.ajax({
+            url: '/AdaMov/public/admin/addMovie',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                console.log('AJAX request successful:', response);
+                if (response && response.success) {
+                    alert('Movie added successfully!');
+                    $('#addMovieForm')[0].reset();
+                    $('.custom-file-label').text('Choose file');
+                    $('.form-control').removeClass('is-invalid');
+                } else {
+                    alert(response.message || 'Failed to add movie. Please try again.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.', xhr.responseText);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    });
+    
+
+    // Update file input labels with selected file names
+    $('.custom-file-input').on('change', function (e) {
+        var fileName = e.target.files[0]?.name || "Choose file";
+        $(this).next('.custom-file-label').html(fileName);
+    });
+
+        
 
 });
