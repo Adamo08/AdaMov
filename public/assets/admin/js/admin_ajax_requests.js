@@ -258,9 +258,9 @@ $(document).ready(function () {
         
     });
 
-    /********************
+    /*******************
         Editing movies *
-    *********************/
+    ********************/
 
     $(document).on('click', '.edit_movie_btn', function () {
         const movieId = $(this).data('movie-id');
@@ -370,6 +370,7 @@ $(document).ready(function () {
     
         // Validate Genre
         const genre = $('#genre').val();
+        console.log(genre);
         if (!genre) {
             $('#genre').addClass('is-invalid');
             isValid = false;
@@ -431,6 +432,7 @@ $(document).ready(function () {
             dataType: 'json',
             beforeSend: function () {
                 console.log('Sending AJAX request...');
+                // console.log(formData);
             },
             success: function (response) {
                 console.log('AJAX request successful:', response);
@@ -462,6 +464,67 @@ $(document).ready(function () {
         $(this).next('.custom-file-label').html(fileName);
     });
 
+    
+
+
+
+    /**************************************************
+     *                                                *
+     *      Genres related actions                    * 
+     *                                                *
+     **************************************************/
+
+    /*******************
+        Editing Genres *
+    ********************/
+
+    $(document).on('click', '.edit_genre_btn', function () {
         
+        const genreId = $(this).data('genre-id');
+        const name = $(this).data('genre-name');
+        const description = $(this).data('genre-description');  
+        
+        console.log({
+            genreId,
+            name,
+            description,
+        });
+        
+        
+        // Populate the modal fields with the extracted data
+        $('#genreId').val(genreId);
+        $('#genreName').val(name);
+        $('#genreDescription').val(description);
+    });
+
+    // Save changes
+    $('saveGenreChangesBtn').on('click', function () {
+        // Serialize the form data
+        const formData = $('#editGenreForm').serialize();
+
+        // Perform an AJAX request to save the changes
+        $.ajax({
+            url: '/AdaMov/public/admin/update_genre',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+
+                const jsonResponse = JSON.parse(response);
+    
+                if (jsonResponse.status === 'success') {
+                    alert(jsonResponse.message);
+                    $('#editGenreModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(jsonResponse.message);
+                }
+            },
+            error: function () {
+                alert('An error occurred while processing your request. Please try again.');
+            },
+        });
+
+    });
+
 
 });
