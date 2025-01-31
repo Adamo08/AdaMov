@@ -242,21 +242,17 @@
         $title = $movieData['title'];
         $description = $movieData['description'];
         $release_date = $movieData['release_date'];
-        $genre = $movieData['genre'];
+        $genre_id = $movieData['genre'];
         $duration = $movieData['duration'];
         $quality = $movieData['quality'];
         $thumbnail = $movieData['thumbnail'];
         $media_file = $movieData['media_file'];
 
-        // Get genre ID using the Genre model
-        $genre_obj = new Genre();
-        $genre_id = $genre_obj->getId($genre);
-
         // Prepare SQL query to insert the movie data
         $sql = "INSERT INTO {$this->table} 
-                (title, description, release_date, genre_id, duration, quality, thumbnail, media_file)
+                (title, description, release_date, genre_id, duration, quality, thumbnail, file_name)
                 VALUES
-                (:title, :description, :release_date, :genre_id, :duration, :quality, :thumbnail, :media_file)";
+                (:title, :description, :release_date, :genre_id, :duration, :quality, :thumbnail, :file_name)";
 
         // Prepare and execute the statement
         $stmt = $this->db->prepare($sql);
@@ -267,7 +263,7 @@
         $stmt->bindParam(':duration', $duration);
         $stmt->bindParam(':quality', $quality);
         $stmt->bindParam(':thumbnail', $thumbnail);
-        $stmt->bindParam(':media_file', $media_file);
+        $stmt->bindParam(':file_name', $media_file);
 
         // Execute the statement and return the result
         return $stmt->execute();
