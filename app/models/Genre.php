@@ -106,4 +106,127 @@
             // Return the result as an array
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
+
+        /**
+         * Updates genre details (admin-only).
+         * 
+         * @param int $id - The ID of the genre to update.
+         * @param array $data - An associative array containing the fields to update (name and/or description).
+         * @return bool - Returns true on success, false on failure.
+         */
+        public function updateGenre($id, $data)
+        {
+            // Validate that the genre ID is provided
+            if (empty($id) || !is_array($data)) {
+                return false;
+            }
+
+            // Fetch current genre data
+            $currentData = $this->getGenreById($id);
+            if (!$currentData) {
+                return false;
+            }
+
+            // Identify changed fields
+            $changes = [];
+            foreach ($data as $key => $value) {
+                if (array_key_exists($key, $currentData) && $currentData[$key] !== $value) {
+                    $changes[$key] = $value;
+                }
+            }
+
+            // If no changes, return early
+            if (empty($changes)) {
+                return true;
+            }
+
+            // Build the SQL query dynamically
+            $fields = [];
+            $values = [];
+            foreach ($changes as $key => $value) {
+                $fields[] = "$key = :$key";
+                $values[":$key"] = $value;
+            }
+
+            $values[':id'] = $id;
+            $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE id = :id";
+
+            try {
+                // Execute the query
+                $stmt = $this->db->prepare($sql);
+                return $stmt->execute($values);
+
+            } catch (PDOException $e) {
+                error_log('Failed to update genre: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        /**
+         * Clears the name and description of a genre.
+         * 
+         * @param int $id - The ID of the genre to clear.
+         * @return bool - Returns true on success, false on failure.
+         */
+        public function removeGenre($id)
+        {
+            // Validate the genre ID
+            if (empty($id) || !is_numeric($id) || $id <= 0) {
+                return false;
+            }
+
+            // Prepare the SQL query to clear name and description
+            $sql = "DELETE FROM {$this->table} WHERE id = :id";
+
+            try {
+                // Execute the query
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $result = $stmt->execute();
+
+                // Return the result of the query execution
+                return $result;
+            } catch (PDOException $e) {
+                error_log('Failed to clear genre fields: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+
+        /**
+         * Fetches genre details by its ID.
+         * 
+         * @param int $id - The ID of the genre to fetch.
+         * @return array|false - Returns an associative array with the genre details or false if not found.
+         */
+        public function getGenreById($id)
+        {
+            // Validate that the genre ID is a positive integer
+            if (empty($id) || !is_numeric($id) || $id <= 0) {
+                return false;
+            }
+
+            // Prepare the SQL query to fetch genre data by ID
+            $sql = "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1";
+
+            try {
+                // Execute the query
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+
+                // Fetch the result
+                $genre = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // Return the genre data if found, otherwise return false
+                return $genre ? $genre : false;
+            } catch (PDOException $e) {
+                error_log('Failed to fetch genre: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+
+
     }
