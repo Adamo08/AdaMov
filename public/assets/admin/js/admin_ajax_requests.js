@@ -478,7 +478,7 @@ $(document).ready(function () {
         Editing Genres *
     ********************/
 
-    $(document).on('click', '.edit_genre_btn', function () {
+    $("#genre-table-body").on('click', '.edit_genre_btn', function () {
         
         const genreId = $(this).data('genre-id');
         const name = $(this).data('genre-name');
