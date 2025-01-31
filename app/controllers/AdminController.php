@@ -285,14 +285,14 @@ class AdminController extends Controller {
             // Validate required fields
             $title = isset($_POST['title']) ? trim($_POST['title']) : null;
             $description = isset($_POST['description']) ? trim($_POST['description']) : null;
-            $releaseDate = isset($_POST['releaseDate']) ? trim($_POST['releaseDate']) : null;
+            $releaseDate = isset($_POST['release_date']) ? trim($_POST['release_date']) : null;
             $genre = isset($_POST['genre']) ? trim($_POST['genre']) : null;
             $duration = isset($_POST['duration']) ? trim($_POST['duration']) : null;
             $quality = isset($_POST['quality']) ? trim($_POST['quality']) : null;
 
             // Validate file inputs
             $thumbnail = isset($_FILES['thumbnail']) ? $_FILES['thumbnail'] : null;
-            $mediaFile = isset($_FILES['fileName']) ? $_FILES['fileName'] : null;
+            $mediaFile = isset($_FILES['file_name']) ? $_FILES['file_name'] : null;
 
             // Check if all required fields are provided
             if (!$title || !$description || !$releaseDate || !$genre || !$duration || !$quality || !$thumbnail || !$mediaFile) {
@@ -317,7 +317,7 @@ class AdminController extends Controller {
             $mediaPath = null;
             
             // Upload Thumbnail
-            $thumbnailDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/thumbnails/';
+            $thumbnailDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/';
             if ($thumbnail && $thumbnail['error'] === UPLOAD_ERR_OK) {
                 $thumbnailExt = pathinfo($thumbnail['name'], PATHINFO_EXTENSION);
                 $thumbnailPath = 'thumbnails/'.uniqid('thumb_') . '.' . $thumbnailExt;
@@ -339,7 +339,7 @@ class AdminController extends Controller {
             }
 
             // Upload Movie File (MP4 or any media type)
-            $mediaDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/videos/';
+            $mediaDir = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/';
             if ($mediaFile && $mediaFile['error'] === UPLOAD_ERR_OK) {
                 $mediaExt = pathinfo($mediaFile['name'], PATHINFO_EXTENSION);
                 $mediaPath = 'videos/'.uniqid('movie_') . '.' . $mediaExt;
@@ -441,6 +441,84 @@ class AdminController extends Controller {
         );
     }
 
+    /**
+     * ==> Removing Genre Action (clearing name and description)
+     */
+    public function remove_genre()
+    {
+        // Check if the request is a POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate genre ID
+            $genreId = isset($_POST['genreId']) ? intval($_POST['genreId']) : null;
+
+            if ($genreId) {
+                $genreModel = new Genre();
+                
+                // Attempt to clear the name and description of the genre
+                if ($genreModel->removeGenre($genreId)) {
+                    // Respond with success
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Genre name and description have been successfully removed.'
+                    ]);
+                } else {
+                    // Operation failed
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to remove genre details. Please try again later.'
+                    ]);
+                }
+            } else {
+                // Invalid or missing genre ID
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid genre ID provided.'
+                ]);
+            }
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
+
+    /**
+     * ==> Updating genres action
+     */
+    public function update_genre()
+    {
+        // Check if the request method is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Sanitize input data
+            $id = isset($_POST['genreId']) ? intval($_POST['genreId']) : null;
+            $data = $_POST;
+            unset($data['genreId']);
+
+            // Ensure the movie ID is provided
+            if (!$id) {
+                echo json_encode(['status' => 'error', 'message' => 'Genre ID is required.']);
+                return;
+            }
+
+            // Instantiate the Movie model
+            $genre = new Genre();
+
+            // Call the updateMovie method
+            $result = $genre->updateGenre($id, $data);
+            if ($result) {
+                echo json_encode(['status' => 'success', 'message' => 'Genre updated successfully.']);
+            } else {
+                error_log("Failed to update genre with ID: $id. Data provided: " . json_encode($data));
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update genre. Please try again.']);
+            }
+        } else {
+            // Handle invalid request methods
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
+        }
+    }
 
 
     /************************
