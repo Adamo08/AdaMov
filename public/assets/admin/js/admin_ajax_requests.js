@@ -498,7 +498,7 @@ $(document).ready(function () {
     });
 
     // Save changes
-    $('saveGenreChangesBtn').on('click', function () {
+    $('#saveGenreChangesBtn').on('click', function () {
         // Serialize the form data
         const formData = $('#editGenreForm').serialize();
 
@@ -524,6 +524,47 @@ $(document).ready(function () {
             },
         });
 
+    });
+
+
+    /********************
+        Removing genres *
+    *********************/
+
+    $("#genre-table-body").on('click', '.remove_genre_btn', function (e) {
+
+        e.preventDefault();
+
+        let genreId = $(this).data('genre-id');
+        let genreRow = $(this).closest('tr');
+
+        if (genreId && confirm("Are you sure you want to delete this Genre?")) {
+            $.ajax({
+                url: "/AdaMov/public/admin/remove_genre",
+                type: "POST",
+                data: { genreId: genreId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Remove the row
+                        genreRow.remove();
+
+                        // Update row numbers
+                        $("#genre-table-body .row-number").each(function (index) {
+                            $(this).text(index + 1);
+                        });
+
+                        alert(response.message);
+                    } else {
+                        alert(response.message || "Error deleting genre.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                },
+            });
+        }
     });
 
 
