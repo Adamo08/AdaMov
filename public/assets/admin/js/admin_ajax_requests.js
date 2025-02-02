@@ -568,4 +568,78 @@ $(document).ready(function () {
     });
 
 
+    /******************
+        Adding Genres *
+    *******************/
+
+    $('#addGenreButton').on('click', function (e) {
+        e.preventDefault();
+
+        // Perform client-side validation
+        let isValid = true;
+
+        // Validate Genre Name
+        const genreName = $('#genreName').val().trim();
+
+        if (!genreName) {
+            $('#genreName').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#genreName').removeClass('is-invalid');
+        }
+
+        // Validate the Genre Description
+        const genreDescription = $('#genreDescription').val().trim();
+        if (!genreDescription) {
+            $('#genreDescription').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('#genreDescription').removeClass('is-invalid');
+        }
+
+        // Stop if validation fails
+        if (!isValid) {
+            return;
+        }
+
+        // Collect form data
+        const formData = $(this).serialize();
+
+        // Send AJAX request to add the genre
+        $.ajax({
+            url: '/AdaMov/public/admin/addGenre',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                console.log('AJAX request successful:', response);
+                if (response.success) {
+                    alert('Genre added successfully!');
+                    $('#addGenreForm')[0].reset();
+                    $('.form-control').removeClass('is-invalid');
+                } else {
+                    alert(response.message || 'Failed to add genre. Please try again.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    });
+
+    // Remove invalid class on input change
+    $('.form-control').on('input change', function () {
+        $(this).removeClass('is-invalid');
+    });
+
 });
