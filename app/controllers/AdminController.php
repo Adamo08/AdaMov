@@ -29,7 +29,7 @@ class AdminController extends Controller {
         $this->view('admin/dashboard', ['statistics' => $statistics]);
     }
 
-/**
+    /**
      * Renders the login view.
      */
     public function login(){
@@ -470,7 +470,7 @@ class AdminController extends Controller {
                 ]);
                 return;
             }
-            
+
             $result = $genreModel->addGenre($genreName, $genreDescription);
     
             if ($result) {
