@@ -442,6 +442,58 @@ class AdminController extends Controller {
     }
 
     /**
+     * ==> Genre addition Action
+     */
+    public function addGenre() {
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Sanitize user input
+            $genreName = sanitizeInput($_POST['genre_name'] ?? '');
+            $genreDescription = sanitizeInput($_POST['genre_description'] ?? '');
+    
+            // Validation: Check if genre name is empty
+            if (empty($genreName)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Genre name is required.'
+                ]);
+                return;
+            }
+    
+            // Insert genre into the database
+            $genreModel = new Genre();
+            // Check if genre already exists
+            if ($genreModel->genreExists($genreName)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Genre already exists.'
+                ]);
+                return;
+            }
+            
+            $result = $genreModel->addGenre($genreName, $genreDescription);
+    
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Genre added successfully.'
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to add genre. Please try again later.'
+                ]);
+            }
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
+    /**
      * ==> Removing Genre Action (clearing name and description)
      */
     public function remove_genre()
