@@ -16,7 +16,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Genre Details</h6>
                 </div>
                 <div class="card-body">
-                    <form action="/AdaMov/public/admin/add_genre" method="POST" id="addGenreForm">
+                    <form action="" method="POST" id="addGenreForm">
                         <!-- Genre Name -->
                         <div class="form-group">
                             <label for="genreName">Genre Name</label>
@@ -26,8 +26,7 @@
                                 id="genreName" 
                                 name="genre_name" 
                                 placeholder="Enter genre name (e.g., Action, Comedy)" 
-                                required
-                                >
+                            >
                         </div>
 
                         <!-- Genre Description -->
@@ -44,7 +43,7 @@
 
                         <!-- Submit Button -->
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary btn-block">
+                            <button type="submit" class="btn btn-primary btn-block" id="addGenreButton">
                                 <i class="fas fa-save"></i> Save Genre
                             </button>
                         </div>
