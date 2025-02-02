@@ -195,6 +195,71 @@
 
 
         /**
+         * Adds a new genre with the given name and description.
+         * 
+         * @param string $name - The name of the genre.
+         * @param string $description - The description of the genre.
+         * @return bool - Returns true on success, false on failure.
+         */
+        public function addGenre($name, $description)
+        {
+            // Validate the genre name
+            if (empty($name) || empty($description)) {
+                return false;
+            }
+
+            // Prepare the SQL query to insert a new genre
+            $sql = "INSERT INTO {$this->table} (name, description) VALUES (:name, :description)";
+
+            try {
+                // Execute the query
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+                $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+                $result = $stmt->execute();
+
+                // Return the result of the query execution
+                return $result;
+            } catch (PDOException $e) {
+                error_log('Failed to add genre: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        /**
+         * Checks if a genre with the given name already exists.
+         * 
+         * @param string $name - The name of the genre to check.
+         * @return bool - Returns true if the genre exists, false otherwise.
+         */
+        public function genreExists($name)
+        {
+            // Validate the genre name
+            if (empty($name)) {
+                return false;
+            }
+
+            // Prepare the SQL query to check if the genre exists
+            $sql = "SELECT COUNT(*) FROM {$this->table} WHERE name = :name";
+
+            try {
+                // Execute the query
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+                $stmt->execute();
+
+                // Fetch the result
+                $count = $stmt->fetchColumn();
+
+                // Return true if the genre exists, false otherwise
+                return $count > 0;
+            } catch (PDOException $e) {
+                error_log('Failed to check if genre exists: ' . $e->getMessage());
+                return false;
+            }
+        }
+
+        /**
          * Fetches genre details by its ID.
          * 
          * @param int $id - The ID of the genre to fetch.
