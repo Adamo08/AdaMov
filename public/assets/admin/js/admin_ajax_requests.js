@@ -603,8 +603,7 @@ $(document).ready(function () {
         }
 
         // Collect form data
-        const formData = new FormData($('#addGenreForm')[0]);
-        
+        const formData = $('#addGenreForm').serialize();
 
         // Send AJAX request to add the genre
         $.ajax({
