@@ -448,14 +448,14 @@ class AdminController extends Controller {
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Sanitize user input
-            $genreName = sanitizeInput($_POST['genre_name'] ?? '');
-            $genreDescription = sanitizeInput($_POST['genre_description'] ?? '');
+            $genreName = isset($_POST['genre_name']) ? trim($_POST['genre_name']) : '';
+            $genreDescription = isset($_POST['genre_description']) ? trim($_POST['genre_description']) : '';
     
-            // Validation: Check if genre name is empty
-            if (empty($genreName)) {
+            // Validation: Check if genre name|description is empty
+            if (!$genreName || !$genreDescription) {
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Genre name is required.'
+                    'message' => 'Please fill in all fields.'
                 ]);
                 return;
             }
