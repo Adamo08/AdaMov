@@ -603,7 +603,8 @@ $(document).ready(function () {
         }
 
         // Collect form data
-        const formData = $(this).serialize();
+        const formData = new FormData($('#addGenreForm')[0]);
+        
 
         // Send AJAX request to add the genre
         $.ajax({
@@ -613,6 +614,7 @@ $(document).ready(function () {
             dataType: 'json',
             beforeSend: function () {
                 console.log('Sending AJAX request...');
+                console.log(formData);
             },
             success: function (response) {
                 console.log('AJAX request successful:', response);
