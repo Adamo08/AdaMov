@@ -753,7 +753,7 @@ class AdminController extends Controller {
             return;
         }
 
-        // Check if the user is logged in
+        // Check if the admin is logged in
         if (!isset($_SESSION['admin_id'])) {
             echo json_encode([
                 'success' => false,
@@ -837,6 +837,77 @@ class AdminController extends Controller {
             ['title' => 'Add Admin']
         );
     }
+
+    /**
+     * ==> Updating Admins Action
+     */
+    public function updateAdmin() {
+        // Ensure the request is an AJAX POST request
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method or empty data.'
+            ]);
+            return;
+        }
+
+        // Check if the admin is logged in
+        if (!isset($_SESSION['admin_id'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'You must be logged in to process this action.'
+            ]);
+            return;
+        }
+
+        $admin_id = $_POST['admin_id'];
+
+        // Get input data
+        $firstName = sanitizeInput($_POST['fname']) ?? '';
+        $lastName = sanitizeInput($_POST['lname']) ?? '';
+        $email = sanitizeInput($_POST['email']) ?? '';
+        $password = $_POST['password'] ?? '';
+
+        // Validate basic fields
+        if (empty($firstName) || empty($lastName) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Please fill out all required fields with valid information.'
+            ]);
+            return;
+        }
+
+        // Initialize the Admin model
+        $adminModel = new Admin();
+
+        // Prepare the update data
+        $updateData = [
+            'fname' => $firstName,
+            'lname' => $lastName,
+            'email' => $email
+        ];
+
+        // If a new password is provided, hash it and update it
+        if (!empty($password)) {
+            $updateData['password'] = hash('sha256', $password);
+        }
+
+        // Update admin profile
+        $updateSuccess = $adminModel->updateAdminProfile($admin_id, $updateData);
+
+        if ($updateSuccess) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Admin updated successfully.'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to update admin. Please try again later.'
+            ]);
+        }
+    }
+
 
     /**
      * ==> Renders the contact view for admins
