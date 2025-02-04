@@ -43,7 +43,7 @@
                                 <th>Actions</th>
                             </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody id="admin-table-body">
                             <?php 
                                 $i = 0;
                                 $admin_id = $_SESSION['admin_id'];
@@ -76,8 +76,8 @@
                                     <td>
                                         <!-- Delete Button -->
                                         <a 
-                                            href="" 
-                                            class="btn btn-danger btn-circle btn-sm <?php echo ($admin_id == $admin['id']) ? 'disabled' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>" 
+                                            href="javascript:void(0);" 
+                                            class="btn btn-danger btn-circle btn-sm remove_admin_btn <?php echo ($admin_id == $admin['id']) ? 'disabled' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>" 
                                             title="Delete Admin"
                                         >
                                             <i class="fas fa-trash"></i>
@@ -85,16 +85,25 @@
                                         
                                         <!-- Edit Button -->
                                         <a 
-                                            href="edit_admin.php?id=<?php echo $admin['id']; ?>" 
-                                            class="btn btn-warning btn-circle btn-sm <?php echo ($admin_id == $admin['id']) ? '' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>" 
+                                            href="javascript:void(0);" 
+                                            class="btn btn-warning btn-circle btn-sm edit_admin_btn 
+                                                <?php echo ($admin_id == $admin['id']) ? '' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>" 
+                                            data-toggle="modal" 
+                                            data-target="#editAdminModal"
                                             title="Edit Admin"
+                                            data-admin-id="<?php echo htmlspecialchars($admin['id']); ?>"
+                                            data-admin-fname="<?php echo htmlspecialchars($admin['fname']); ?>"
+                                            data-admin-lname="<?php echo htmlspecialchars($admin['lname']); ?>"
+                                            data-admin-email="<?php echo htmlspecialchars($admin['email']); ?>"
+                                            data-admin-avatar="<?php echo htmlspecialchars("/AdaMov/public/assets/admin/".$admin['avatar']); ?>"
                                         >
                                             <i class="fas fa-edit"></i>
                                         </a>
+
                                         
                                         <!-- Message Button -->
                                         <a 
-                                            href="message_admin.php?id=<?php echo $admin['id']; ?>" 
+                                            href="javascript:void(0);" 
                                             class="btn btn-primary btn-circle btn-sm <?php echo ($admin_id == $admin['id']) ? 'disabled' : ''; ?>" 
                                             title="Message Admin"
                                         >
@@ -111,5 +120,101 @@
         </div>
 
     </div>
+
+
+
+    <!-- Edit Admin Modal -->
+    <div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #343a40, #212529);">
+                    <h5 class="modal-title" id="editAdminModalLabel">Edit Admin Details</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form id="editAdminForm">
+                        <input type="hidden" id="edit_admin_id" name="admin_id">
+
+                        <div class="row">
+                            <!-- Avatar -->
+                            <div class="col-md-4 text-center">
+                                <div class="position-relative">
+                                    <img 
+                                        id="edit_admin_avatar" 
+                                        src="" 
+                                        alt="Admin Avatar" 
+                                        class="img-fluid rounded-circle mb-3 shadow-lg border border-secondary p-1"
+                                        data-toggle="tooltip" 
+                                        title="Only the admin can update their avatar."
+                                        style="cursor: pointer; transition: transform 0.3s;"
+                                        onmouseover="this.style.transform='scale(1.1)'" 
+                                        onmouseout="this.style.transform='scale(1)'"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Admin Details -->
+                            <div class="col-md-8">
+                                <div class="p-4 border rounded bg-light shadow-sm">
+                                    <div class="form-group">
+                                        <label for="edit_admin_fname" class="font-weight-bold">First Name</label>
+                                        <input type="text" class="form-control" id="edit_admin_fname" name="fname" placeholder="Enter first name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_admin_lname" class="font-weight-bold">Last Name</label>
+                                        <input type="text" class="form-control" id="edit_admin_lname" name="lname" placeholder="Enter last name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_admin_email" class="font-weight-bold">Email Address</label>
+                                        <input type="email" class="form-control" id="edit_admin_email" name="email" placeholder="Enter email">
+                                    </div>
+                                    <div class="form-group position-relative">
+                                        <label for="edit_admin_password" class="font-weight-bold">Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="edit_admin_password" name="password" placeholder="Enter new password">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success" form="editAdminForm">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById('edit_admin_password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
+
+
+
 
 <?php require ADMINVIEWS."layouts/footer.php"; ?>
