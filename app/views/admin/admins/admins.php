@@ -152,8 +152,6 @@
                                         data-toggle="tooltip" 
                                         title="Only the admin can update their avatar."
                                         style="cursor: pointer; transition: transform 0.3s;"
-                                        onmouseover="this.style.transform='scale(1.1)'" 
-                                        onmouseout="this.style.transform='scale(1)'"
                                     >
                                 </div>
                             </div>
@@ -195,7 +193,7 @@
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
                         <i class="fas fa-times"></i> Cancel
                     </button>
-                    <button type="submit" class="btn btn-success" form="editAdminForm">
+                    <button type="submit" class="btn btn-success" id="saveAdminChangesBtn">
                         <i class="fas fa-save"></i> Save Changes
                     </button>
                 </div>
