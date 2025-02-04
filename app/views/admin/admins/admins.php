@@ -128,7 +128,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!-- Modal Header -->
-                <div class="modal-header text-white" style="background: linear-gradient(135deg, #343a40, #212529);">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="editAdminModalLabel">Edit Admin Details</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
