@@ -511,7 +511,7 @@ class AdminController extends Controller {
                     // Respond with success
                     echo json_encode([
                         'success' => true,
-                        'message' => 'Genre name and description have been successfully removed.'
+                        'message' => 'Genre removed successfully.'
                     ]);
                 } else {
                     // Operation failed
