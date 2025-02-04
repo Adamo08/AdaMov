@@ -681,5 +681,104 @@ $(document).ready(function () {
 
     });
 
+    // Save changes
+    $('#saveAdminChangesBtn').on('click', function (e) {
+        e.preventDefault();
+
+        let isValid = true;
+
+        // Get input values
+        const adminId = $('#edit_admin_id').val().trim();
+        const fname = $('#edit_admin_fname').val().trim();
+        const lname = $('#edit_admin_lname').val().trim();
+        const email = $('#edit_admin_email').val().trim();
+        const password = $('#edit_admin_password').val().trim();
+
+        // Reset validation classes
+        $('.form-control').removeClass('is-invalid');
+
+        // Validate First Name
+        if (!fname) {
+            $('#edit_admin_fname').addClass('is-invalid');
+            isValid = false;
+        }
+
+        // Validate Last Name
+        if (!lname) {
+            $('#edit_admin_lname').addClass('is-invalid');
+            isValid = false;
+        }
+
+        // Validate Email
+        if (!email || !validateEmail(email)) {
+            $('#edit_admin_email').addClass('is-invalid');
+            isValid = false;
+        }
+
+        // Validate Password (if provided, ensure it's at least 6 characters)
+        if (password && password.length < 6) {
+            $('#edit_admin_password').addClass('is-invalid');
+            isValid = false;
+        }
+
+        // Stop if validation fails
+        if (!isValid) {
+            return;
+        }
+
+        // Prepare data object
+        let formData = {
+            admin_id: adminId,
+            fname: fname,
+            lname: lname,
+            email: email
+        };
+
+        // Include password if provided
+        if (password) {
+            formData.password = password;
+        }
+
+        // Send AJAX request
+        $.ajax({
+            url: '/AdaMov/public/admin/updateAdmin',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+                console.log('Sending AJAX request...', formData);
+            },
+            success: function (response) {
+                console.log('AJAX request successful:', response);
+                if (response.success) {
+                    alert("Admin details updated successfully!");
+                    $('#editAdminModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(response.message || "An error occurred. Please try again.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed:', error);
+                alert("Failed to update admin details. Please try again later.");
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    });
+
+    // Remove invalid class on input change
+    $('.form-control').on('input change', function () {
+        $(this).removeClass('is-invalid');
+    });
+
+    // Email validation function
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    
 
 });
