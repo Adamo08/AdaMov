@@ -643,4 +643,43 @@ $(document).ready(function () {
         $(this).removeClass('is-invalid');
     });
 
+
+
+
+    /**************************************************
+     *                                                *
+     *      Admins related actions                    * 
+     *                                                *
+     **************************************************/
+
+    /*******************
+        Editing Admins *
+    ********************/
+
+    $("#admin-table-body").on('click', '.edit_admin_btn', function () {
+    
+        const adminId = $(this).data('admin-id');
+        const fname = $(this).data('admin-fname');
+        const lname = $(this).data('admin-lname');
+        const email = $(this).data('admin-email');
+        const avatar = $(this).data('admin-avatar');
+
+        console.log({
+            adminId,
+            fname,
+            lname,
+            email,
+            avatar,
+        });
+
+        // Populate the modal fields with the extracted data
+        $('#edit_admin_id').val(adminId);
+        $('#edit_admin_fname').val(fname);
+        $('#edit_admin_lname').val(lname);
+        $('#edit_admin_email').val(email);
+        $('#edit_admin_avatar').attr('src', avatar);
+
+    });
+
+
 });
