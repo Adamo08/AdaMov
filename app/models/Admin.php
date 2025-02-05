@@ -109,6 +109,44 @@
             }
         }
 
+        /**
+         * Adds a new admin to the database.
+         *
+         * @param array $data Associative array containing admin details.
+         * @return bool Returns true on success, false on failure.
+         */
+        public function addAdmin($data) {
+            try {
+                // Ensure required fields are present
+                if (empty($data['fname']) || empty($data['lname']) || empty($data['email']) || empty($data['password'])) {
+                    return false;
+                }
+
+                // Default avatar if not provided
+                $avatar = !empty($data['avatar']) ? $data['avatar'] : 'avatars/default.svg';
+
+                // Prepare SQL statement
+                $sql = "INSERT INTO {$this->table} (fname, lname, email, password, avatar, added_by) 
+                        VALUES (:fname, :lname, :email, :password, :avatar, :added_by)";
+                
+                $stmt = $this->db->prepare($sql);
+
+                // Binding params
+                $stmt->bindParam(':fname', $data['fname'], PDO::PARAM_STR);
+                $stmt->bindParam(':lname', $data['lname'], PDO::PARAM_STR);
+                $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
+                $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
+                $stmt->bindParam(':avatar', $avatar, PDO::PARAM_STR);
+                $stmt->bindParam(':added_by', $data['added_by'], PDO::PARAM_INT);
+
+                return $stmt->execute();
+            } catch (PDOException $e) {
+                error_log("Error adding admin: " . $e->getMessage());
+                return false;
+            }
+        }
+
+
 
         /**
          * Returns the avatar for the specified Admin
