@@ -820,5 +820,94 @@ $(document).ready(function () {
         }
     });
 
+    /******************
+        Adding Admins *
+    *******************/
+
+    $("#addAdminForm").submit(function (e) {
+        e.preventDefault();
+
+        // Reset previous validation states
+        $(".form-control").removeClass("is-invalid");
+
+        let formData = new FormData(this);
+        let isValid = true;
+
+        // Validate first name
+        if ($("#firstName").val().trim() === "") {
+            $("#firstName").addClass("is-invalid");
+            isValid = false;
+        }
+
+        // Validate last name
+        if ($("#lastName").val().trim() === "") {
+            $("#lastName").addClass("is-invalid");
+            isValid = false;
+        }
+
+        // Validate email
+        let email = $("#email").val().trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            $("#email").addClass("is-invalid");
+            isValid = false;
+        }
+
+        // Validate password (minimum 8 characters)
+        if ($("#password").val().length < 8) {
+            $("#password").addClass("is-invalid");
+            isValid = false;
+        }
+
+        // Validate avatar file
+        let avatar = $("#avatar")[0].files[0];
+        if (!avatar) {
+            $("#avatar").addClass("is-invalid");
+            isValid = false;
+        } else {
+            let allowedExtensions = ["image/jpeg", "image/png"];
+            if (!allowedExtensions.includes(avatar.type)) {
+                $("#avatar").addClass("is-invalid");
+                isValid = false;
+            }
+        }
+
+        if (!isValid) return;
+
+        // Send AJAX request
+        $.ajax({
+            url: "/AdaMov/public/admin/addAdmin",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Admin added successfully!");
+                    $('#addAdminForm')[0].reset();
+                    $('.custom-file-label').text('Choose file');
+                    $('.form-control').removeClass('is-invalid');
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    });
+    
+
 
 });
