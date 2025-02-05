@@ -16,7 +16,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Admin Details</h6>
                 </div>
                 <div class="card-body">
-                    <form action="/AdaMov/public/admin/add_admin" method="POST" enctype="multipart/form-data" id="addAdminForm">
+                    <form method="POST" enctype="multipart/form-data" id="addAdminForm">
                         
                         <!-- Hidden Input for Current Admin ID -->
                         <input type="hidden" name="added_by" value="<?= $_SESSION['admin_id'] ?>">
@@ -57,7 +57,7 @@
                                 name="email" 
                                 placeholder="Enter email address" 
                                 required
-                                >
+                            >
                         </div>
 
                         <!-- Avatar Upload -->
@@ -84,14 +84,21 @@
                         <!-- Password -->
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="password" 
-                                name="password" 
-                                placeholder="Enter password" 
-                                required
-                            >
+                            <div class="input-group">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Enter password" 
+                                    required
+                                >
+                                <div class="input-group-append">
+                                    <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                </div>
+                            </div>
                             <small class="form-text text-muted">
                                 Password must be at least 8 characters long.
                             </small>
@@ -110,5 +117,16 @@
     </div>
 
 </div>
+
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    </script>
 
 <?php require ADMINVIEWS."layouts/footer.php"; ?>
