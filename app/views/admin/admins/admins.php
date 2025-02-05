@@ -77,7 +77,8 @@
                                         <!-- Delete Button -->
                                         <a 
                                             href="javascript:void(0);" 
-                                            class="btn btn-danger btn-circle btn-sm remove_admin_btn <?php echo ($admin_id == $admin['id']) ? 'disabled' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>" 
+                                            class="btn btn-danger btn-circle btn-sm remove_admin_btn <?php echo ($admin_id == $admin['id']) ? 'disabled' : ($admin_id != $admin['added_by'] ? 'disabled' : ''); ?>"
+                                            data-admin-id="<?php echo htmlspecialchars($admin['id']); ?>"
                                             title="Delete Admin"
                                         >
                                             <i class="fas fa-trash"></i>
@@ -174,7 +175,7 @@
                                     <div class="form-group position-relative">
                                         <label for="edit_admin_password" class="font-weight-bold">Password</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" id="edit_admin_password" name="password" placeholder="Enter new password">
+                                            <input type="text" class="form-control" id="edit_admin_password" name="password" placeholder="Enter new password">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
                                                     <i class="fas fa-eye"></i>
