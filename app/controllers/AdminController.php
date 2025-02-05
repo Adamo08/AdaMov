@@ -911,8 +911,7 @@ class AdminController extends Controller {
     /**
      * ==> Removing Admins Action
      */
-    public function removeAdmin()
-    {
+    public function removeAdmin(){
         // Check if the request is a POST request
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validate admin ID
@@ -958,6 +957,66 @@ class AdminController extends Controller {
             ]);
         }
     }
+
+    /**
+     * ==> Adding Admin Action
+     */
+    public function addAdmin()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $firstName = trim($_POST['first_name']);
+            $lastName = trim($_POST['last_name']);
+            $email = trim($_POST['email']);
+            $password = $_POST['password'];
+            $addedBy = $_POST['added_by'];
+            
+            // Validate required fields
+            if (empty($firstName) || empty($lastName) || empty($email) || empty($password)) {
+                echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+                return;
+            }
+
+            // Hash the password
+            $hashedPassword = hash("sha256", $password);
+
+            // Process the avatar file
+            $avatar = null;
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                $fileTmpPath = $_FILES['avatar']['tmp_name'];
+                $fileName = $_FILES['avatar']['name'];
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $avatar = 'avatars/' . uniqid() . '.' . $fileExtension;
+
+                // Move uploaded file
+                $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/admin' . $avatar;
+                if (!move_uploaded_file($fileTmpPath, $uploadPath)) {
+                    echo json_encode(['success' => false, 'message' => 'Failed to upload avatar.']);
+                    return;
+                }
+            }
+
+            // Prepare data
+            $data = [
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'password' => $hashedPassword,
+                'avatar' => $avatar,
+                'added_by' => $addedBy
+            ];
+
+            $adminModel = new Admin();
+
+            if ($adminModel->addAdmin($data)) {
+                echo json_encode(['success' => true, 'message' => 'Admin added successfully.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to add admin.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+        }
+    }
+
 
 
 
