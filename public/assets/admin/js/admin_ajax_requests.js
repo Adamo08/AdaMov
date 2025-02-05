@@ -779,6 +779,46 @@ $(document).ready(function () {
         return emailRegex.test(email);
     }
 
-    
+
+    /********************
+        Removing admins *
+    *********************/
+
+    $("#admin-table-body").on('click', '.remove_admin_btn', function (e) {
+
+        e.preventDefault();
+
+        let adminId = $(this).data('admin-id');
+        let adminRow = $(this).closest('tr');
+
+        if (adminId && confirm("Are you sure you want to delete this Admin?")) {
+            $.ajax({
+                url: "/AdaMov/public/admin/removeAdmin",
+                type: "POST",
+                data: { admin_id: adminId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Remove the row
+                        adminRow.remove();
+
+                        // Update row numbers
+                        $("#admin-table-body .row-number").each(function (index) {
+                            $(this).text(index + 1);
+                        });
+
+                        alert(response.message);
+                    } else {
+                        alert(response.message || "Error deleting admin.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                },
+            });
+        }
+    });
+
 
 });
