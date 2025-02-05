@@ -908,6 +908,59 @@ class AdminController extends Controller {
         }
     }
 
+    /**
+     * ==> Removing Admins Action
+     */
+    public function removeAdmin()
+    {
+        // Check if the request is a POST request
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate admin ID
+            $adminId = isset($_POST['admin_id']) ? intval($_POST['admin_id']) : null;
+
+            if ($adminId) {
+                $adminModel = new Admin();
+                
+                // Fetch the admin's avatar path
+                $avatarPath = $adminModel->getAvatar($adminId);
+
+                // Attempt to remove the admin from the database
+                if ($adminModel->removeAdmin($adminId)) {
+                    // Check if the avatar exists and delete it
+                    if ($avatarPath && file_exists($_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/admin/' . $avatarPath)) {
+                        unlink($_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/admin/' . $avatarPath);
+                    }
+
+                    // Respond with success
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Admin removed successfully.'
+                    ]);
+                } else {
+                    // Operation failed
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to remove Admin. Please try again later.'
+                    ]);
+                }
+            } else {
+                // Invalid or missing admin ID
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid admin ID provided.'
+                ]);
+            }
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
+
+
 
     /**
      * ==> Renders the contact view for admins
