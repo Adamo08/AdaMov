@@ -84,5 +84,46 @@
         }
 
         
+        /**
+         * Removes an admin by their ID.
+         *
+         * @param int $id The ID of the admin to remove.
+         * @return bool Returns true on success, false on failure.
+         */
+        public function removeAdmin($id) {
+            try {
+            // Ensure the id is valid
+            if (empty($id) || !is_numeric($id)) {
+                return false;
+            }
+
+            // Prepare and execute the delete statement
+            $sql = "DELETE FROM {$this->table} WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+
+            } catch (PDOException $e) {
+                error_log("Error removing admin: " . $e->getMessage());
+                return false;
+            }
+        }
+
+
+        /**
+         * Returns the avatar for the specified Admin
+         * @param int $id admin's ID
+         * @return string 
+        */
+        public function getAvatar($id){
+            // Base Query
+            $sql = "SELECT avatar FROM {$this->table} WHERE id = :id";
+            // Prepare AND Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
 
     }
