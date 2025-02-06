@@ -1010,6 +1010,10 @@ class AdminController extends Controller {
             if ($adminModel->addAdmin($data)) {
                 echo json_encode(['success' => true, 'message' => 'Admin added successfully.']);
             } else {
+                 // If admin wasn't added, delete the uploaded avatar
+                if ($avatar && file_exists($uploadPath)) {
+                    unlink($uploadPath);
+                }
                 echo json_encode(['success' => false, 'message' => 'Failed to add admin.']);
             }
         } else {
