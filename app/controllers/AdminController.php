@@ -988,7 +988,7 @@ class AdminController extends Controller {
                 $avatar = 'avatars/' . uniqid() . '.' . $fileExtension;
 
                 // Move uploaded file
-                $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/admin' . $avatar;
+                $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/AdaMov/public/assets/admin/' . $avatar;
                 if (!move_uploaded_file($fileTmpPath, $uploadPath)) {
                     echo json_encode(['success' => false, 'message' => 'Failed to upload avatar.']);
                     return;
@@ -1019,18 +1019,20 @@ class AdminController extends Controller {
 
 
 
-
-
     /**
      * ==> Renders the contact view for admins
     */
     public function contact_admin(){
         $this->authenticate();
+        $adminModel = new Admin();
+        $admins = $adminModel->all();
         $this->view(
             "admin/admins/contact_admin",
-            ['title' => 'Add Admin']
+            [
+                'title' => 'Add Admin',
+                'admins' => $admins
+            ]
         );
-
     }
 
     /**
