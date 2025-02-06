@@ -30,7 +30,7 @@
                                 id="firstName" 
                                 name="first_name" 
                                 placeholder="Enter first name" 
-                                required
+                                
                             >
                         </div>
 
@@ -43,7 +43,7 @@
                                 id="lastName" 
                                 name="last_name" 
                                 placeholder="Enter last name" 
-                                required
+                                
                             >
                         </div>
 
@@ -56,7 +56,7 @@
                                 id="email" 
                                 name="email" 
                                 placeholder="Enter email address" 
-                                required
+                                
                             >
                         </div>
 
@@ -71,7 +71,7 @@
                                         id="avatar" 
                                         name="avatar" 
                                         accept=".jpg, .jpeg, .png" 
-                                        required
+                                        
                                     >
                                     <label class="custom-file-label" for="avatar">Choose file</label>
                                 </div>
@@ -91,7 +91,7 @@
                                     id="password" 
                                     name="password" 
                                     placeholder="Enter password" 
-                                    required
+                                    
                                 >
                                 <div class="input-group-append">
                                     <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword()">
