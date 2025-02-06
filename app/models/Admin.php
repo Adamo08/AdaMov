@@ -118,7 +118,7 @@
         public function addAdmin($data) {
             try {
                 // Ensure required fields are present
-                if (empty($data['fname']) || empty($data['lname']) || empty($data['email']) || empty($data['password'])) {
+                if (empty($data['first_name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password'])) {
                     return false;
                 }
 
@@ -132,8 +132,8 @@
                 $stmt = $this->db->prepare($sql);
 
                 // Binding params
-                $stmt->bindParam(':fname', $data['fname'], PDO::PARAM_STR);
-                $stmt->bindParam(':lname', $data['lname'], PDO::PARAM_STR);
+                $stmt->bindParam(':fname', $data['first_name'], PDO::PARAM_STR);
+                $stmt->bindParam(':lname', $data['last_name'], PDO::PARAM_STR);
                 $stmt->bindParam(':email', $data['email'], PDO::PARAM_STR);
                 $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR);
                 $stmt->bindParam(':avatar', $avatar, PDO::PARAM_STR);
