@@ -1033,11 +1033,125 @@ class AdminController extends Controller {
         $this->view(
             "admin/admins/contact_admin",
             [
-                'title' => 'Add Admin',
+                'title' => 'Contact Admin',
                 'admins' => $admins
             ]
         );
     }
+
+    /**
+     * ==> Sending a message action
+     */
+    public function sendMessage()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $sender_id = isset($_POST['sender_id']) ? trim($_POST['sender_id']) : null;
+            $receiver_id = isset($_POST['receiver_id']) ? trim($_POST['receiver_id']) : null;
+            $message = isset($_POST['message']) ? trim($_POST['message']) : null;
+
+            // Validate input fields
+            if (!$sender_id || !$receiver_id || !$message) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'All fields are required.'
+                ]);
+                return;
+            }
+
+            if ($sender_id == $receiver_id) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'You cannot send a message to yourself.'
+                ]);
+                return;
+            }
+
+            // Handle file upload with 5MB size limit
+            $attachmentPath = null;
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/AdaMov/public/assets/admin/attachments/";
+
+            if (!empty($_FILES['attachment']['name'])) {
+                $fileTmpPath = $_FILES['attachment']['tmp_name'];
+                $fileName = uniqid('attach_');
+                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                $fileSize = $_FILES['attachment']['size']; // Get file size in bytes
+                $maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                $allowedExtensions = ["jpg", "jpeg", "png", "pdf", "docx"];
+
+                // Validate file type
+                if (!in_array($fileExtension, $allowedExtensions)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Invalid file type. Allowed types: jpg, jpeg, png, pdf, docx.'
+                    ]);
+                    return;
+                }
+
+                // Validate file size
+                if ($fileSize > $maxSize) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'File size exceeds 5MB limit.'
+                    ]);
+                    return;
+                }
+
+                // Create directory if not exists
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                // Define file path
+                $attachmentPath = "attachments/" . $fileName;
+                $fullFilePath = $uploadDir . $fileName;
+
+                // Move uploaded file
+                if (!move_uploaded_file($fileTmpPath, $fullFilePath)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to upload attachment.'
+                    ]);
+                    return;
+                }
+            }
+
+            // Prepare message data for insertion
+            $messageData = [
+                'sender_id' => $sender_id,
+                'receiver_id' => $receiver_id,
+                'message' => $message,
+                'attachment' => $attachmentPath
+            ];
+
+            // Insert message into the database
+            $adminModel = new Admin();
+            $inserted = $adminModel->sendMessage($messageData);
+
+            if ($inserted) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Message sent successfully!'
+                ]);
+            } else {
+                // Delete uploaded file if message failed to send
+                if ($attachmentPath) {
+                    unlink($fullFilePath);
+                }
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to send message. Please try again later.'
+                ]);
+            }
+        } else {
+            // Invalid request method
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method. Use POST for this action.'
+            ]);
+        }
+    }
+
 
     /**
      * Helper function to check if the admin is authenticated.
