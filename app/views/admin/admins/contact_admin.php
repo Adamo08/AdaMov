@@ -14,7 +14,7 @@
                     <h6 class="m-0 font-weight-bold"><i class="fas fa-envelope"></i> New Message</h6>
                 </div>
                 <div class="card-body">
-                    <form id="contactAdminForm" enctype="multipart/form-data">
+                    <form id="contactAdminForm" enctype="multipart/form-data" method="POST">
                         <input type="hidden" name="sender_id" value="<?= $_SESSION['admin_id']; ?>">
 
                         <!-- Select Admin to Contact -->
