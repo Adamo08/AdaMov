@@ -146,6 +146,32 @@
             }
         }
 
+        /**
+         * Sends a message From an Admin to an Other
+         * @param array $messageData Associative array containing message details.
+         * @return bool Returns true on success, false on failure.
+         */
+        public function sendMessage(array $messageData): bool
+        {
+            try {
+                $query = "INSERT INTO admin_messages (sender_id, receiver_id, message, attachment) 
+                        VALUES (:sender_id, :receiver_id, :message, :attachment)";
+                
+                $stmt = $this->db->prepare($query);
+
+                $stmt->bindParam(':sender_id', $messageData['sender_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':receiver_id', $messageData['receiver_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':message', $messageData['message'], PDO::PARAM_STR);
+                $stmt->bindParam(':attachment', $messageData['attachment'], PDO::PARAM_STR);
+
+                return $stmt->execute();
+            } catch (PDOException $e) {
+                error_log("sendMessage Error: " . $e->getMessage());
+                return false;
+            }
+        }
+
+
 
 
         /**
