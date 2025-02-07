@@ -35,6 +35,29 @@ CREATE TABLE IF NOT EXISTS admins (
     FOREIGN KEY (added_by) REFERENCES admins(id) ON DELETE SET NULL
 );
 
+
+
+--
+-- Admin messages table
+--
+CREATE TABLE IF NOT EXISTS admin_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    attachment VARCHAR(255) DEFAULT NULL,
+    is_read TINYINT(1) DEFAULT 0, -- 0 = Unread, 1 = Read
+    is_deleted_sender TINYINT(1) DEFAULT 0, -- If sender deletes the message
+    is_deleted_receiver TINYINT(1) DEFAULT 0, -- If receiver deletes the message
+    replied_to INT DEFAULT NULL, -- If the message is a reply to another message
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES admins(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES admins(id) ON DELETE CASCADE,
+    FOREIGN KEY (replied_to) REFERENCES admin_messages(id) ON DELETE SET NULL
+);
+
+
+
 --
 -- Genres table
 --
