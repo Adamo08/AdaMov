@@ -908,6 +908,38 @@ $(document).ready(function () {
         });
     });
     
+    /**********************
+        Contacting Admins *
+    ***********************/
+
+    $("#contactAdminForm").on('submit',function (e) {
+        
+        e.preventDefault();
+        
+        let formData = new FormData(this);
+        $("#responseMessage").html('<div class="alert alert-info">Sending message...</div>');
+
+        $.ajax({
+            url: "/AdaMov/public/admin/sendMessage",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                let data = JSON.parse(response);
+                if (data.success) {
+                    $("#responseMessage").html('<div class="alert alert-success">' + data.message + '</div>');
+                    $("#contactAdminForm")[0].reset();
+                } else {
+                    $("#responseMessage").html('<div class="alert alert-danger">' + data.message + '</div>');
+                }
+            },
+            error: function () {
+                $("#responseMessage").html('<div class="alert alert-danger">An error occurred. Please try again.</div>');
+            }
+        });
+    });
+    
 
 
 });
