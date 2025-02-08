@@ -157,6 +157,23 @@ VALUES
     ('Bob', 'Johnson', 'bob.johnson@admin.com', SHA2('password123', 256), 'avatar/bob.png', 3);
 
 
+-- Inserting into admin_messages table
+INSERT INTO admin_messages (sender_id, receiver_id, message)
+VALUES
+    (1, 2, 'Have you reviewed the new movie submissions for this week?'),
+    (2, 3, 'The new trailer looks great! We need to finalize the release date.'),
+    (3, 4, 'Can you check if the user reviews for the latest movie are live?'),
+    (4, 5, 'Do you have any updates on the new film category we’re adding?'),
+    (5, 6, 'The marketing team needs the final list of top-rated movies for the campaign.'),
+    (6, 1, 'I’ve updated the ratings system for the movies, please review.'),
+    (1, 3, 'We need to discuss the upcoming movie releases for next quarter.'),
+    (2, 4, 'The recent reviews on the comedy section are great, let’s highlight them.'),
+    (3, 5, 'Can you help me with editing the movie descriptions for SEO optimization?'),
+    (4, 6, 'There’s an issue with the sorting of action movies in the database. Please fix it.'),
+    (5, 1, 'The new movie trailer is ready to be uploaded to the platform.'),
+    (6, 2, 'Let’s schedule a meeting to discuss the revenue reports from the last month.');
+
+
 
 -- Inserting into genres table
 INSERT INTO genres (name, description) 
