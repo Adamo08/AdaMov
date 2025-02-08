@@ -1073,7 +1073,9 @@ class AdminController extends Controller {
             if (!empty($_FILES['attachment']['name'])) {
                 $fileTmpPath = $_FILES['attachment']['tmp_name'];
                 $fileName = uniqid('attach_');
-                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                $fileExtension = strtolower(pathinfo($_FILES['attachment']['name'], PATHINFO_EXTENSION));
+                // Error log the extension
+                error_log($fileExtension);
                 $fileSize = $_FILES['attachment']['size']; // Get file size in bytes
                 $maxSize = 5 * 1024 * 1024; // 5MB in bytes
                 $allowedExtensions = ["jpg", "jpeg", "png", "pdf", "docx"];
@@ -1102,8 +1104,8 @@ class AdminController extends Controller {
                 }
 
                 // Define file path
-                $attachmentPath = "attachments/" . $fileName;
-                $fullFilePath = $uploadDir . $fileName;
+                $attachmentPath = "attachments/" . $fileName. '.' . $fileExtension;
+                $fullFilePath = $uploadDir . $fileName. '.' . $fileExtension;
 
                 // Move uploaded file
                 if (!move_uploaded_file($fileTmpPath, $fullFilePath)) {
