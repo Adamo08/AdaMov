@@ -69,6 +69,9 @@
     <!-- Script js to handle ajax request  -->
     <script src="<?php echo ADMINASSETS;?>js/admin_ajax_requests.js"></script>
 
+    <!-- Global js script for messaging functionality -->
+    <script src="<?php echo ADMINASSETS?>js/messaging.js"></script>
+
     <!-- Sweet Alerts CDN js link  -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
