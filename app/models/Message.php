@@ -76,17 +76,25 @@ class Message extends Model
      */
     public function getMessagesForDropdown($adminId, $limit = 5)
     {
-        // SQL query to fetch a limited number of messages (e.g., 5) for the given admin
-        $sql = "SELECT * FROM {$this->table} WHERE receiver_id = :receiver_id ORDER BY created_at DESC LIMIT :limit";
+        $sql = "SELECT am.id, am.message, am.created_at, 
+                    a.avatar, 
+                    CONCAT(a.fname, ' ', a.lname) AS sender_name,
+                    am.is_read
+                FROM admin_messages am
+                JOIN admins a ON am.sender_id = a.id
+                WHERE am.receiver_id = :receiver_id 
+                AND am.is_deleted_receiver = 0
+                ORDER BY am.created_at DESC
+                LIMIT :limit";
         
-        // Prepare and execute the query
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':receiver_id', $adminId, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-
-        // Fetch all messages and return them as an associative array
+    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+
 
 }
