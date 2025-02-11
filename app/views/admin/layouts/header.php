@@ -29,6 +29,12 @@
     <!-- Custom styles for this page -->
     <link href="<?php echo ADMINASSETS?>vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <!-- Load jQuery  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Global js script for messaging functionality -->
+    <script src="<?php echo ADMINASSETS?>js/messaging.js"></script>
+
 </head>
 
 <body id="page-top">
