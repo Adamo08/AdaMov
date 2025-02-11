@@ -9,13 +9,19 @@ $(document).ready(function () {
             method: "GET",
             dataType: "json",
             success: function (response) {
+                if (typeof response === "string") {
+                    response = JSON.parse(response);
+                }
+            
+                console.log("Final response:", response);
+            
                 let dropdownMenu = $("#messagesDropdown").siblings(".dropdown-menu");
                 dropdownMenu.find(".dropdown-item").remove();
-
-                if (response.length > 0) {
-                    $(".badge-counter").text(response.length);
-
-                    response.forEach((message) => {
+            
+                if (Array.isArray(response.messages) && response.messages.length > 0) {
+                    $(".badge-counter").text(response.messages.length);
+            
+                    response.messages.forEach((message) => {
                         let messageItem = `
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
