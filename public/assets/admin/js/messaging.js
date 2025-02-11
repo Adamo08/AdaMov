@@ -1,12 +1,16 @@
 $(document).ready(function () {
+
+    alert("messaging.js");
+    console.log("messaging.js");
+    
     function fetchMessages() {
         $.ajax({
-            url: "/AdaMov/public/Message/getMessagesForDropdown",
+            url: "/AdaMov/public/Message/fetchMessagesForDropdown",
             method: "GET",
             dataType: "json",
             success: function (response) {
                 let dropdownMenu = $("#messagesDropdown").siblings(".dropdown-menu");
-                dropdownMenu.find(".dropdown-item").remove(); // Clear previous messages
+                dropdownMenu.find(".dropdown-item").remove();
 
                 if (response.length > 0) {
                     $(".badge-counter").text(response.length);
@@ -27,7 +31,7 @@ $(document).ready(function () {
                     });
                 } else {
                     dropdownMenu.append(`<a class="dropdown-item text-center">No new messages</a>`);
-                    $(".badge-counter").text(""); // Remove counter if no messages
+                    $(".badge-counter").text("");
                 }
             },
             error: function () {
