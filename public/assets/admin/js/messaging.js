@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-    alert("messaging.js");
-    console.log("messaging.js");
+    // alert("messaging.js");
+    // console.log("messaging.js");
     
     function fetchMessages() {
         $.ajax({
@@ -25,8 +25,8 @@ $(document).ready(function () {
                         let messageItem = `
                             <a class="dropdown-item d-flex align-items-center" href="#">
                                 <div class="dropdown-list-image mr-3">
-                                    <img class="rounded-circle" src="${message.avatar}" alt="Avatar">
-                                    <div class="status-indicator ${message.is_read ? 'bg-success' : 'bg-warning'}"></div>
+                                    <img class="rounded-circle" src="/AdaMov/public/assets/admin/${message.avatar ?? 'avatars/default.svg'}" alt="Avatar">
+                                    <div class="status-indicator ${message.is_read ? 'bg-warning' : 'bg-success'}"></div>
                                 </div>
                                 <div class="${message.is_read ? '' : 'font-weight-bold'}">
                                     <div class="text-truncate">${message.message}</div>
