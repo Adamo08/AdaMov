@@ -76,7 +76,7 @@ class Message extends Model
      */
     public function getMessagesForDropdown($adminId, $limit = 5)
     {
-        $sql = "SELECT am.id, am.message, am.created_at, 
+        $sql = "SELECT am.id, am.message, am.created_at, am.attachment,
                     a.avatar, 
                     CONCAT(a.fname, ' ', a.lname) AS sender_name,
                     am.is_read
