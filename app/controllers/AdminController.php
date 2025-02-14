@@ -1067,7 +1067,7 @@ class AdminController extends Controller {
             }
 
             // Sanitize message input to prevent XSS (strip HTML and special chars)
-            $message = htmlspecialchars(strip_tags($message), ENT_QUOTES, 'UTF-8');
+            $message = sanitizeInput($message);
 
             // Handle file upload with 5MB size limit
             $attachmentPath = null;
