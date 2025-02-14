@@ -1066,6 +1066,9 @@ class AdminController extends Controller {
                 return;
             }
 
+            // Sanitize message input to prevent XSS (strip HTML and special chars)
+            $message = htmlspecialchars(strip_tags($message), ENT_QUOTES, 'UTF-8');
+
             // Handle file upload with 5MB size limit
             $attachmentPath = null;
             $uploadDir = $_SERVER['DOCUMENT_ROOT'] . "/AdaMov/public/assets/admin/attachments/";
