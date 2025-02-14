@@ -1,8 +1,5 @@
 $(document).ready(function () {
 
-    // alert("messaging.js");
-    // console.log("messaging.js");
-    
     function fetchMessages() {
         $.ajax({
             url: "/AdaMov/public/Message/fetchMessagesForDropdown",
@@ -12,18 +9,23 @@ $(document).ready(function () {
                 if (typeof response === "string") {
                     response = JSON.parse(response);
                 }
-            
-                console.log("Final response:", response);
-            
+                
                 let dropdownMenu = $("#messagesDropdown").siblings(".dropdown-menu");
                 dropdownMenu.find(".dropdown-item").remove();
-            
+
                 if (Array.isArray(response.messages) && response.messages.length > 0) {
                     $(".badge-counter").text(response.messages.length);
-            
+
                     response.messages.forEach((message) => {
                         let messageItem = `
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <a class="dropdown-item d-flex align-items-center message-item" 
+                                href="#" 
+                                data-id="${message.id}"
+                                data-message="${message.message}"
+                                data-sender="${message.sender_name}"
+                                data-created_at="${message.created_at}"
+                                data-attachment="${message.attachment ?? ''}"
+                            >
                                 <div class="dropdown-list-image mr-3">
                                     <img class="rounded-circle" src="/AdaMov/public/assets/admin/${message.avatar ?? 'avatars/default.svg'}" alt="Avatar">
                                     <div class="status-indicator ${message.is_read ? 'bg-warning' : 'bg-success'}"></div>
@@ -48,7 +50,33 @@ $(document).ready(function () {
 
     // Fetch messages every 30 seconds
     setInterval(fetchMessages, 30000);
-
-    // Initial fetch on page load
     fetchMessages();
+
+    // Handle message click event
+    $(document).on("click", ".message-item", function () {
+        let messageId = $(this).data("id");
+        let sender = $(this).data("sender");
+        let message = $(this).data("message");
+        let createdAt = $(this).data("created_at");
+        let attachment = $(this).data("attachment");
+
+        $("#messageModal .modal-title").text(`Message from ${sender}`);
+        $("#messageModal .modal-body .message-content").text(message);
+        $("#messageModal .modal-body .message-time").text(`Sent on: ${createdAt}`);
+
+        if (attachment) {
+            $("#messageModal .modal-body .message-attachment").html(
+                `<a href="/AdaMov/public/assets/admin/${attachment}" target="_blank">View Attachment</a>`
+            );
+        } else {
+            $("#messageModal .modal-body .message-attachment").html("");
+        }
+
+        $("#messageModal").modal("show");
+
+
+        // Here we mark the message as read -- Later
+
+    });
+
 });
