@@ -42,6 +42,32 @@
         </div>
     </div>
 
+
+    <!-- Message Modal -->
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg rounded">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="message-content lead text-dark"></p>
+                    <p class="message-time text-muted"></p>
+                    <div class="message-attachment mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <!-- Bootstrap core JavaScript-->
     <script src="<?php echo ADMINASSETS?>vendor/jquery/jquery.min.js"></script>
     <script src="<?php echo ADMINASSETS?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
