@@ -90,6 +90,24 @@ $(document).ready(function () {
     });
 
 
+    $(document).on("click", ".mark-as-read", function () {
+        let messageId = $(this).data('id');
+        let messageRow = $(this).closest('tr');
+    
+        markAsRead(messageId);
+    
+        // Disable the button
+        $(this).prop("disabled", true);
+    
+        // Change row background: remove 'table-warning' and add 'table-light'
+        messageRow.removeClass("table-warning").addClass("table-light");
+    
+        alert("Message marked as read");
+    });
+    
+    
+
+
     // A function to mark a message as read
     function markAsRead(messageId){
         $.ajax({
