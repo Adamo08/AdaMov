@@ -1,5 +1,41 @@
 $(document).ready(function () {
 
+
+
+    // A function to mark a message as read
+    function markAsRead(messageId){
+        $.ajax({
+            url: '/AdaMov/public/message/markAsRead',
+            method: 'POST',
+            data: {
+                message_id: messageId
+            },
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    console.log(response);
+                } else {
+                    alert(response.message);
+                    console.log(response);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    }
+
+
     function fetchMessages() {
         $.ajax({
             url: "/AdaMov/public/Message/fetchMessagesForDropdown",
@@ -21,6 +57,7 @@ $(document).ready(function () {
                             <a class="dropdown-item d-flex align-items-center message-item" 
                                 href="#" 
                                 data-id="${message.id}"
+                                data-is_read="${message.is_read}"
                                 data-message="${message.message}"
                                 data-sender="${message.sender_name}"
                                 data-created_at="${message.created_at}"
@@ -59,6 +96,7 @@ $(document).ready(function () {
     // Handle message click event
     $(document).on("click", ".message-item", function () {
         let messageId = $(this).data("id");
+        let isMessageRead = $(this).data("is_read");
         let sender = $(this).data("sender");
         let message = $(this).data("message");
         let createdAt = $(this).data("created_at");
@@ -79,8 +117,46 @@ $(document).ready(function () {
         $("#messageModal").modal("show");
 
 
-        // Here we mark the message as read -- Later
+        // Here we mark the message as read -- if not is read yet
+        if (isMessageRead != 1){
+            markAsRead(messageId);
+        }
 
     });
+
+
+    // A function to mark a message as read
+    function markAsRead(messageId){
+        $.ajax({
+            url: '/AdaMov/public/message/markAsRead',
+            method: 'POST',
+            data: {
+                message_id: messageId
+            },
+            beforeSend: function () {
+                console.log('Sending AJAX request...');
+            },
+            success: function (response) {
+                response = JSON.parse(response);
+                if (response.success) {
+                    // alert(response.message);
+                    console.log(response);
+                } else {
+                    // alert(response.message);
+                    console.log(response);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed.');
+                console.error('XHR:', xhr);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            },
+            complete: function () {
+                console.log('AJAX request completed.');
+            }
+        });
+    }
 
 });
