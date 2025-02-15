@@ -68,7 +68,10 @@
                                             $file_icon = '<span class="badge badge-light">No Attachment</span>';
                                         }
                                     ?>
-                                    <tr class="<?php echo $message['is_read'] ? 'table-light' : 'table-warning'; ?>">
+                                    <tr 
+                                        class="<?php echo $message['is_read'] ? 'table-light' : 'table-warning'; ?>"
+                                        data-id="<?php echo $message['id']; ?>"
+                                    >
                                         <td><?php echo (++$i); ?></td>
                                         <td><?php echo htmlspecialchars($message['sender_name']); ?></td>
                                         <td><?php echo htmlspecialchars($message['message']); ?></td>
@@ -123,19 +126,13 @@
 <script>
     $(document).ready(function () {
 
-        $('.delete-message').click(function () {
-            if (confirm('Are you sure you want to delete this message?')) {
-                let messageId = $(this).data('id');
-                alert('Delete clicked for message ID: ' + messageId);
-            }
-        });
-
         $('.view-image').click(function (e) {
             e.preventDefault();
             let imgSrc = $(this).data('img');
             $('#modalImage').attr('src', imgSrc);
             $('#imageModal').modal('show');
         });
+
     });
 </script>
 
