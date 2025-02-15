@@ -77,6 +77,48 @@ class MessageController extends Controller
         }
     }
 
+
+    /**
+     * Deleting messages action
+     * 
+     * @return void
+     */
+    public function deleteMessage()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = isset($_POST['message_id']) ? intval($_POST['message_id']) : null;
+
+            if ($messageId != null) {
+                // Call the model's deleteMessage function
+                $result = $this->messageModel->deleteMessage($messageId);
+
+                if ($result) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Message deleted successfully.'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Failed to delete the message.'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid Data passed!'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method!'
+            ]);
+        }
+    }
+
+
+
     /**
      * Fetch and display all messages for the current admin.
      * This could be for the admin to view their messages.
