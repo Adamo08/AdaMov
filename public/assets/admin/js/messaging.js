@@ -142,4 +142,40 @@ $(document).ready(function () {
         });
     }
 
+
+
+
+
+    // Message deletion functionality
+    $(document).on('click', '.delete-message', function(){
+        if (confirm('Are you sure you want to delete this message?')) {
+            let messageId = $(this).data('id');
+            let messageRow = $(`tr[data-id="${messageId}"]`);
+            
+            // Make the POST request to delete the message
+            $.ajax({
+                url: '/AdaMov/public/message/deleteMessage',
+                type: 'POST',
+                data: { message_id: messageId },
+                success: function(response) {
+                    // Handle the response
+                    const res = JSON.parse(response);
+                    if (res.success) {
+                        messageRow.fadeOut(500, function() {
+                            ($this).remove();
+                        });
+                        alert(res.message);
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle any errors
+                    alert('An error occurred while deleting the message.');
+                }
+            });
+        }
+    });
+
+
 });
