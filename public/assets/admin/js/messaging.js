@@ -1,41 +1,6 @@
 $(document).ready(function () {
 
 
-
-    // A function to mark a message as read
-    function markAsRead(messageId){
-        $.ajax({
-            url: '/AdaMov/public/message/markAsRead',
-            method: 'POST',
-            data: {
-                message_id: messageId
-            },
-            beforeSend: function () {
-                console.log('Sending AJAX request...');
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message);
-                    console.log(response);
-                } else {
-                    alert(response.message);
-                    console.log(response);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('AJAX request failed.');
-                console.error('XHR:', xhr);
-                console.error('Status:', status);
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            },
-            complete: function () {
-                console.log('AJAX request completed.');
-            }
-        });
-    }
-
-
     function fetchMessages() {
         $.ajax({
             url: "/AdaMov/public/Message/fetchMessagesForDropdown",
