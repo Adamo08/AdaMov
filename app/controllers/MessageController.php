@@ -43,13 +43,38 @@ class MessageController extends Controller
      * @param int $messageId - The ID of the message to be marked as read.
      * @return void
      */
-    public function markAsRead($messageId)
+    public function markAsRead()
     {
-        // Mark the message as read by passing the message ID
-        $this->messageModel->markAsRead($messageId);
-        
-        // Return a success message or status
-        echo json_encode(['success' => true]);
+        if($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+            $messageId = isset($_POST['message_id']) ? intval($_POST['message_id']) : null;
+            
+            if ($messageId != null){
+                // Mark the message as read by passing the message ID
+                $this->messageModel->markAsRead($messageId);
+                
+                // Return a success message or status
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Message marked as read'
+                ]);
+            }
+            else
+            {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid Data passed!'
+                ]);
+            }
+            
+        }
+        else
+        {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Invalid request method!'
+            ]);
+        }
     }
 
     /**
