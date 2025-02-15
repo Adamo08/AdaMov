@@ -49,7 +49,7 @@ class MessageController extends Controller
         $this->messageModel->markAsRead($messageId);
         
         // Return a success message or status
-        echo json_encode(['status' => 'success']);
+        echo json_encode(['success' => true]);
     }
 
     /**
