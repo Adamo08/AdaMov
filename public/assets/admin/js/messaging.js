@@ -37,6 +37,10 @@ $(document).ready(function () {
                             </a>`;
                         dropdownMenu.append(messageItem);
                     });
+                    
+                    dropdownMenu.append(`<div class="dropdown-divider"></div>`);
+                    dropdownMenu.append(`<a class="dropdown-item text-center small text-gray-500" href="/AdaMov/public/admin/messages">View All Messages</a>`);
+                
                 } else {
                     dropdownMenu.append(`<a class="dropdown-item text-center">No new messages</a>`);
                     $(".badge-counter").text("");
