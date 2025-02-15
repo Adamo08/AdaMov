@@ -1157,6 +1157,35 @@ class AdminController extends Controller {
         }
     }
 
+    /**
+     * ==> Renders the view for viewing messages
+    */
+    public function messages(){
+        $this->authenticate();
+
+        // Admin ID
+        $admin_id = $_SESSION['admin_id'];
+
+        // Fetching messages
+        $MessageModel = new Message();
+        $messages = $MessageModel->getMessagesByAdmin($admin_id);
+
+        // Fetch admin names and add them to the messages array
+        $AdminModel = new Admin();
+        foreach ($messages as &$message) {
+            $senderName = $AdminModel->getName($message['sender_id']);
+            $message['sender_name'] = $senderName;
+        }
+
+        // Render the view
+        $this->view(
+            "admin/admins/messages",
+            [
+                'title' => 'View Messages',
+                'messages' => $messages
+            ]
+        );
+    }
 
     /**
      * Helper function to check if the admin is authenticated.
