@@ -189,5 +189,20 @@
             return $stmt->fetchColumn();
         }
 
+        /**
+         * Get's the name of the admin by their ID
+         * @param int $id
+         * @return string|null
+         */
+        public function getName($id){
+            // Base Query
+            $sql = "SELECT CONCAT(fname, ' ', lname) FROM {$this->table} WHERE id = :id";
+            // Prepare AND Execute
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        }
+
 
     }
