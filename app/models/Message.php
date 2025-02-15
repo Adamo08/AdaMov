@@ -94,7 +94,25 @@ class Message extends Model
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     
+    /**
+     * Delete a specific message by marking it as deleted for the receiver.
+     * 
+     * @param int $messageId - The ID of the message to delete.
+     * @return bool - True if the update was successful, false otherwise.
+     */
+    public function deleteMessage($messageId)
+    {
+        // SQL query to mark the message as deleted for the receiver
+        $sql = "DELETE FROM {$this->table} WHERE id = :message_id";
+        
+        // Prepare and execute the query
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':message_id', $messageId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
 
 
 }
