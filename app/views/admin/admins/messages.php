@@ -52,15 +52,15 @@
                                             if (in_array($file_extension, ['jpg', 'jpeg', 'png'])) {
                                                 $file_icon = '<a href="#" class="view-image" data-img="'.$file_path.'" title="View Image">
                                                                 <i class="fas fa-image text-primary"></i>
-                                                              </a>';
+                                                            </a>';
                                             } elseif ($file_extension === 'pdf') {
                                                 $file_icon = '<a href="'.$file_path.'" target="_blank" title="View PDF">
                                                                 <i class="fas fa-file-pdf text-danger"></i>
-                                                              </a>';
+                                                            </a>';
                                             } elseif ($file_extension === 'docx') {
                                                 $file_icon = '<a href="'.$file_path.'" target="_blank" title="Download DOCX">
                                                                 <i class="fas fa-file-word text-info"></i>
-                                                              </a>';
+                                                            </a>';
                                             } else {
                                                 $file_icon = '<span class="badge badge-secondary">Unknown</span>';
                                             }
@@ -75,7 +75,12 @@
                                         <td><?php echo $file_icon; ?></td>
                                         <td><?php echo date('d M Y, H:i', strtotime($message['created_at'])); ?></td>
                                         <td class="d-flex justify-content-arround flex-wrap gap-2">
-                                            <button class="btn btn-success btn-xs mark-as-read" data-id="<?php echo $message['id']; ?>" title="Mark as Read">
+                                            <button 
+                                                class="btn btn-success btn-xs mark-as-read" 
+                                                data-id="<?php echo $message['id']; ?>" 
+                                                title="Mark as Read"
+                                                <?php echo $message['is_read'] ? 'disabled' : ''; ?>
+                                            >
                                                 <i class="fas fa-check"></i>
                                             </button>
                                             <button class="btn btn-danger btn-xs delete-message" data-id="<?php echo $message['id']; ?>" title="Delete">
@@ -117,10 +122,6 @@
 
 <script>
     $(document).ready(function () {
-        $('.mark-as-read').click(function () {
-            let messageId = $(this).data('id');
-            alert('Mark as read clicked for message ID: ' + messageId);
-        });
 
         $('.delete-message').click(function () {
             if (confirm('Are you sure you want to delete this message?')) {
