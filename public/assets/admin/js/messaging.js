@@ -178,4 +178,25 @@ $(document).ready(function () {
     });
 
 
+    // Message Replay functionality
+    $(document).on('click', '.reply-message', function() {
+        let messageId = $(this).data('id');
+        let senderId = $(this).data('sender-id');
+
+        // Create a hidden form
+        var form = $('<form>', {
+            method: 'POST',
+            action: '/AdaMov/public/admin/contact_admin'
+        });
+
+        // Create hidden input fields for message_id and sender_id
+        form.append($('<input>', { type: 'hidden', name: 'message_id', value: messageId }));
+        form.append($('<input>', { type: 'hidden', name: 'sender_id', value: senderId }));
+
+        // Append the form to the body and submit it
+        $('body').append(form);
+        form.submit();
+    });
+
+
 });
