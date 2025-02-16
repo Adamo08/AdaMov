@@ -1030,12 +1030,23 @@ class AdminController extends Controller {
         $this->authenticate();
         $adminModel = new Admin();
         $admins = $adminModel->all();
+
+
+        // Check if the message_id and sender_id are available in POST data
+        $messageId = isset($_POST['message_id']) ? $_POST['message_id'] : null;
+        $senderId = isset($_POST['sender_id']) ? $_POST['sender_id'] : null;
+
+
+        $data = [
+            'title' => 'Contact Admin',
+            'message_id' => $messageId,
+            'receiver_id' => $senderId,
+            'admins' => $admins
+        ];
+
         $this->view(
             "admin/admins/contact_admin",
-            [
-                'title' => 'Contact Admin',
-                'admins' => $admins
-            ]
+            $data
         );
     }
 
