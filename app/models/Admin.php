@@ -154,8 +154,8 @@
         public function sendMessage(array $messageData): bool
         {
             try {
-                $query = "INSERT INTO admin_messages (sender_id, receiver_id, message, attachment) 
-                        VALUES (:sender_id, :receiver_id, :message, :attachment)";
+                $query = "INSERT INTO admin_messages (sender_id, receiver_id, message, attachment, replied_to) 
+                        VALUES (:sender_id, :receiver_id, :message, :attachment, :replied_to)";
                 
                 $stmt = $this->db->prepare($query);
 
@@ -163,6 +163,7 @@
                 $stmt->bindParam(':receiver_id', $messageData['receiver_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':message', $messageData['message'], PDO::PARAM_STR);
                 $stmt->bindParam(':attachment', $messageData['attachment'], PDO::PARAM_STR);
+                $stmt->bindParam(':replied_to', $messageData['replied_to'], PDO::PARAM_STR);
 
                 return $stmt->execute();
             } catch (PDOException $e) {
