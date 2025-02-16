@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <form id="contactAdminForm" enctype="multipart/form-data" method="POST">
                         <input type="hidden" name="sender_id" value="<?= $_SESSION['admin_id']; ?>">
-
+                        <input type="hidden" name="replied_to" id="replied_to" value="<?= isset($message_id) ? $message_id : ''; ?>">
                         <!-- Select Admin to Contact -->
                         <div class="form-group">
                             <label for="receiver_id">Select Admin</label>
@@ -24,13 +24,15 @@
                                 <option value="" disabled selected>Choose an admin</option>
                                 <?php foreach ($admins as $admin): ?>
                                     <?php if ($admin['id'] != $_SESSION['admin_id']): ?>
-                                        <option value="<?= $admin['id']; ?>">
+                                        <option value="<?= $admin['id']; ?>"
+                                            <?php if (isset($receiver_id) && $receiver_id == $admin['id']) echo 'selected'; ?>>
                                             <?= htmlspecialchars($admin['fname'] . ' ' . $admin['lname']); ?> (<?= htmlspecialchars($admin['email']); ?>)
                                         </option>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </select>
                         </div>
+
 
                         <!-- Message -->
                         <div class="form-group">
