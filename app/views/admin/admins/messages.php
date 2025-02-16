@@ -89,7 +89,7 @@
                                             <button class="btn btn-danger btn-xs delete-message" data-id="<?php echo $message['id']; ?>" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
-                                            <button class="btn btn-info btn-xs reply-message" data-id="<?php echo $message['id']; ?>" data-sender="<?php echo $message['sender_id']; ?>" title="Reply">
+                                            <button class="btn btn-info btn-xs reply-message" data-id="<?php echo $message['id']; ?>" data-sender-id="<?php echo $message['sender_id']; ?>" title="Reply">
                                                 <i class="fas fa-reply"></i>
                                             </button>
                                         </td>
