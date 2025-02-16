@@ -1058,6 +1058,7 @@ class AdminController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sender_id = isset($_POST['sender_id']) ? trim($_POST['sender_id']) : null;
             $receiver_id = isset($_POST['receiver_id']) ? trim($_POST['receiver_id']) : null;
+            $replied_to = isset($_POST['replied_to']) ? trim($_POST['replied_to']) : null;
             $message = isset($_POST['message']) ? trim($_POST['message']) : null;
 
             // Validate input fields
@@ -1135,6 +1136,7 @@ class AdminController extends Controller {
             $messageData = [
                 'sender_id' => $sender_id,
                 'receiver_id' => $receiver_id,
+                'replied_to' => $replied_to,
                 'message' => $message,
                 'attachment' => $attachmentPath
             ];
